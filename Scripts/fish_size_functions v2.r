@@ -2,13 +2,15 @@
 
 ## simulate temperature effect on growth coeffecients: source: Kielbassa et al. 2010; Mallet et al. 1999 
 K_tempr <- function(tempr, tempr_max, tempr_min, tempr_opt, K_opt){
-    growth_coef_tempr <- K_opt * ((tempr - tempr_min) * (tempr- tempr_max) / (tempr - tempr_min) * (tempr - tempr_max) - (tempr - tempr_opt)^2)
+    growth_coef_tempr <- K_opt * ((tempr - tempr_min) * (tempr- tempr_max) / 
+                                    ((tempr - tempr_min) * (tempr - tempr_max) - (tempr - tempr_opt)^2)
+                                  )
     return(growth_coef_tempr)
 }
 
 #  simulate tempeature effect on asymptotic length and weight: source: Kielbassa et al. 2010; Mallet et al. 1999
 #Linf_tempr <- function(growth_per, tempr, K_tempr){
- #   Linf_asymp_tempr <- sqrt((10^growth_per * tempr) / K_tempr)
+ #   Linf_asymp_tempr <- sqrt((10^growth_per * tempr) / (K_tempr))
   #  return(Linf_asymp_tempr)
 #}
     

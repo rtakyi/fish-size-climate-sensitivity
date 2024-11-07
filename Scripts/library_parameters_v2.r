@@ -49,7 +49,7 @@ for (irow in 1:n){
   scnr_clim$size_indicator_Linf <- numeric(scnr_tempr)
   scnr_clim$size_indicator_Winf <- numeric(scnr_tempr)
   scnr_clim$size_indicator_K <- numeric(scnr_tempr)
-  
+
   # Fish biology parameters
   Linf <- target_species$Linf..cm.[irow] 
   Winf <- target_species$Winf..g.[irow]
@@ -67,10 +67,14 @@ for (irow in 1:n){
 
   # Loop through each temperature scenario
   for (i in 1:scnr_tempr){
-    Linf_new_clim <- Linf * K_tempr(tempr[i], tempr_max, tempr_min, tempr_opt, K_opt)
-    Winf_new_clim <- Winf * K_tempr(tempr[i], tempr_max, tempr_min, tempr_opt, K_opt)
-    K_new_clim <- K_tempr(tempr[i], tempr_max, tempr_min, tempr_opt, K_opt)
     
+    #update this with linf model... 
+    Linf_new_clim <- Linf #* K_tempr(tempr[i], tempr_max, tempr_min, tempr_opt, K_opt)
+    Winf_new_clim <- Winf #* K_tempr(tempr[i], tempr_max, tempr_min, tempr_opt, K_opt)
+    #debugonce(K_tempr)
+    K_new_clim <- K_tempr(tempr[i], tempr_max, tempr_min, tempr_opt, K_opt)
+    #make sure K doesn't go less than zero
+    K_new_clim <- max(c(0, K_new_clim))
     ## Calculate YPR model with new Linf growth parameters
     dat_clim <- abundance_catch_at_age(max_age, N0, Linf_new_clim, Winf, K, t0, a, b, M, L50, k_length, Fmort_overall)
     ind_tempr <- stock_indicators(dat_clim, Linf, Winf)
@@ -87,8 +91,8 @@ for (irow in 1:n){
     scnr_clim$size_indicator_K[i] <- ind_tempr$mlength_indicator
 
    }
-
-    scnr_clim <- target_species[irow]
+ 
+    #scnr_clim <- target_species[irow]
     
     
     all_scnrs <- c(all_scnrs, list(scnr_clim))
@@ -96,10 +100,11 @@ for (irow in 1:n){
 
     # Plot results
     g2 <- ggplot(scnr_clim, aes(x = tempr)) +
-      geom_line(aes(y = size_indicator_Linf), color = "black") +
-      geom_line(aes(y = size_indicator_Winf), color = "blue") +
+      #geom_line(aes(y = size_indicator_Linf), color = "black") +
+      #geom_line(aes(y = size_indicator_Winf), color = "blue") +\
+      geom_vline(xintercept = tempr_opt, linetype = 2) + 
       geom_line(aes(y = size_indicator_K), color = "red") +
-      labs(title = target_species, x = "Temperature change", y = "Size indicator") 
+      labs(title = target_species, x = "Temperature", y = "Size indicator") 
 
  gall <- c(gall, list(g2))
 
