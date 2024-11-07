@@ -1,0 +1,15 @@
+species,id,Linf (cm),Winf (g),growth_coef (yr-1),M (yr-1), t0 (yr),max_age (yr),L50 (cm),Fmort (yr-1),Reference
+Lutjanus fulgens,lf,51.09,8000,0.47,0.78,-0.3,6.41,31.5,1.91,
+L. sebae,ls,116,17630,0.14,0.12,-0.3,34,39.8,0.09,Grandcourt et al. (2008); Martinez-Andrade (2003)
+L. sebae,ls1,78.7,,0.12,0.12,-1.9,28,39.8,0.1,Grandcourt et al. (2008)
+L. johnii,lj,99.33,10920,0.16,0.24,-0.3,11,27.08,0.35,Barua et al. (2023); Martinez-Andrade (2003)
+Sardinops sagax,ss,25,210,0.37,0.48,-0.28,9,14.5,0.24,AFMA (2022); FRDC (2023); García-Sandoval and Chávez (2019)
+S. sagax,ss1,25,210,0.37,0.48,-0.28,9,14.5,0.35,AFMA (2022); FRDC (2023); García-Sandoval and Chávez (2019)
+Sardinella aurita,sa,41,800,0.47,0.74,-0.3,5,13,1.62,Benamar (2019); fishbase.sehttps://www.fishbase.se/summary/Sardinella-aurita.html; Ofori-Danson et al. (2018)
+S. aurita,sa1,34.21,800,0.39,0.79,-1.34,5,13,1.62,Benamar (2019); fishbase.sehttps://www.fishbase.se/summary/Sardinella-aurita.html; Ofori-Danson et al. (2018)
+S. aurita,sa2,21.5,104,0.25,0.76,-0.74,12,5.99,2.41,Amponsah et al. (2017); Akel (2009)
+S. aurita,sa3,37.5,1055,1.02,0.7,-0.6,5,27,1.8,Baldé et al. (2019)
+S. maderensis,sm,44.63,960,0.38,0.81,-0.39,7.51,13.99,0.43,Gabche and Hockey (1995); https://www.fishbase.se/summary/1047; Ofori-Danson et al. (2018); Wehye et al. (2017)
+S. maderensis,sm1,37.5,300,1.01,0.5,-0.4,7.51,24.5,1.8,Ba et al. (2016); Baldé et al. (2019); Gabche and Hockey (1995)
+S. maderensis,sm2,27.25,269.5,1.26,0.74,-2.88,7.51,24.5,0.1,Gabche and Hockey (1995)
+S. maderensis,sm3,27.25,269.5,0.48,0.74,-1.76,7.51,24.5,0.1,Gabche and Hockey (1995)
