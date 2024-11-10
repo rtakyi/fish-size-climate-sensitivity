@@ -1,17 +1,23 @@
 
 
 ## simulate temperature effect on growth coeffecients: source: Kielbassa et al. 2010; Mallet et al. 1999 
-K_tempr <- function(tempr, tempr_max, tempr_min, tempr_opt, K_opt){
-    growth_coef_tempr <- K_opt * ((tempr - tempr_min) * (tempr- tempr_max) / 
+k_tempr <- function(tempr, tempr_max, tempr_min, tempr_opt, k_opt){
+    growth_coef_tempr <- k_opt * ((tempr - tempr_min) * (tempr- tempr_max) / 
                                     ((tempr - tempr_min) * (tempr - tempr_max) - (tempr - tempr_opt)^2)
                                   )
     return(growth_coef_tempr)
 }
 
-#  simulate tempeature effect on asymptotic length and weight: source: Kielbassa et al. 2010; Mallet et al. 1999
-#Linf_tempr <- function(growth_per, tempr, K_tempr){
- #   Linf_asymp_tempr <- sqrt((10^growth_per * tempr) / (K_tempr))
-  #  return(Linf_asymp_tempr)
+## simulate growth performance: source: Kielbassa et al. 2010; Mallet et al. 1999
+#growth_per_tempr <- function(k, Linf){
+    #gr_pr <- log10(k) * log10(Linf)
+    #return(gr_pr)
+#}
+
+##  simulate temperature effect on asymptotic length and weight: source: Kielbassa et al. 2010; Mallet et al. 1999
+#Linf_tempr <- function(growth_per_tempr, k_tempr){
+    #asymp_L_tempr <- sqrt((10^(growth_per_tempr)) / (k_tempr))
+    #return(asymp_L_tempr)
 #}
     
 ## simulate logisitic selectivity
@@ -22,14 +28,14 @@ logistic_selectivity <- function(length, L50, k_length, Fmort_fully_selected){
 }  
 
 ## simulate length at age using the von Bertalanffy growth function
-VBGF_length <- function(age, Linf, K, t0) {
-    length_at_age <- Linf * (1 - exp(-K * (age - t0)))
+VBGF_length <- function(age, Linf, k, t0) {
+    length_at_age <- Linf * (1 - exp(-k * (age - t0)))
     return(length_at_age)
 }
 
-## simulate weight at age using the von Bertalanffy growth function
-VBGF_weight <- function(age, Winf, K, t0, a, b) {
-    weight_at_age <- a * (Winf * (1 - exp(-K * (age - t0))))^b
+## simulate weight at age using the von Bertalanffy growth function : source: Geromont and Butterworth 2015
+VBGF_weight <- function(age, Winf, k, t0, a, b) {
+    weight_at_age <- a * (Winf * (1 - exp(-k * (age - t0))))^b
     return(weight_at_age)
 }
 
@@ -54,12 +60,12 @@ fish_caught_at_age <- function(abundance_at_age, M, fmort, max_age){
 # L50: size at which the probability of selection is 0.5
 # k_length: slope of the logistic curve
 # Fmort_fully_selected: fishing mortality at fully selected length
-abundance_catch_at_age <- function(max_age, N0, Linf, Winf, K, t0, a, b, M, L50, k_length, Fmort_fully_selected){
+abundance_catch_at_age <- function(max_age, N0, Linf, Winf, k, t0, a, b, M, L50, k_length, Fmort_fully_selected){
  datout <- data.frame(age = 0:max_age, abundance = rep(0, max_age+1), catch = rep(0, max_age+1), length = rep(0, max_age+1), weight = rep(0, max_age+1), fmort_lengths = rep(0, max_age+1))
   datout$abundance[1] <- N0 #initial abundance at age 0
   age <- 0 :max_age
-  datout$length <- VBGF_length(age, Linf, K, t0) #length at age
-  datout$weight <- VBGF_weight(age, Winf, K, t0, a, b) #weight at age
+  datout$length <- VBGF_length(age, Linf, k, t0) #length at age
+  datout$weight <- VBGF_weight(age, Winf, k, t0, a, b) #weight at age
   datout$fmort_lengths <- logistic_selectivity(datout$length, L50, k_length, Fmort_fully_selected) #fishing mort at length
     for (i in 2:(max_age+1)){
     datout$abundance[i] <- datout$abundance[i-1]*exp((-M-datout$fmort_lengths[i]))

@@ -29,8 +29,10 @@ tempr <- seq(4, 30, by = 0.1) # temperature range (made-up numbers)
 tempr_min <- 4 # minimum temperature (made-up number)
 tempr_max <- 30 # maximum temperature (made-up number)
 tempr_opt <- 20 # optimal temperature (made-up number)
-K_opt <- 0.3 # optimal growth coefficient (made-up number)
+k_opt <- 0.3 # optimal growth coefficient (made-up number)
 scnr_tempr <- length(tempr)
+#ipcc_tempr_scnr <- seq(1.5, 4, by = 0.1) # temperature scenario 
+#ipccC_scnr <- length(ipcc_tempr_scnr)
 
 # Calculate indicators for each species
 
@@ -40,7 +42,7 @@ gall <- all_scnrs <- NULL
 # Loop through each species
 for (irow in 1:n){
   ## Add climate change impacts on Linf, Winf and K
-  scnr_clim <- data.frame(tempr = tempr,
+  scnr_clim <- data.frame(tempr = tempr, 
                           size_indicator_Linf = NA,
                           size_indicator_Winf = NA,
                           size_indicator_K = NA)
@@ -53,7 +55,7 @@ for (irow in 1:n){
   # Fish biology parameters
   Linf <- target_species$Linf..cm.[irow] 
   Winf <- target_species$Winf..g.[irow]
-  K <- target_species$growth_coef.[irow]
+  k <- target_species$growth_coef.[irow]
   M <- target_species$M.[irow]
   t0 <- target_species$t0.[irow]
   max_age <- target_species$max_age.[irow] 
@@ -68,33 +70,33 @@ for (irow in 1:n){
   # Loop through each temperature scenario
   for (i in 1:scnr_tempr){
     
-    #update this with linf model... 
-    Linf_new_clim <- Linf #* K_tempr(tempr[i], tempr_max, tempr_min, tempr_opt, K_opt)
-    Winf_new_clim <- Winf #* K_tempr(tempr[i], tempr_max, tempr_min, tempr_opt, K_opt)
-    #debugonce(K_tempr)
-    K_new_clim <- K_tempr(tempr[i], tempr_max, tempr_min, tempr_opt, K_opt)
+    # Calculate new growth parameters
+    k_new_clim <- k_tempr(tempr[i], tempr_max, tempr_min, tempr_opt, k_opt)
     #make sure K doesn't go less than zero
-    K_new_clim <- max(c(0, K_new_clim))
+    k_new_clim <- max(c(0, k_new_clim))
+
+    #update this with linf model... 
+    Linf_new_clim <- Linf #_tempr(growth_per_tempr, k_new_clim)
+    Winf_new_clim <- #Winf #* K_tempr(tempr[i], tempr_max, tempr_min, tempr_opt, K_opt)
+
     ## Calculate YPR model with new Linf growth parameters
-    dat_clim <- abundance_catch_at_age(max_age, N0, Linf_new_clim, Winf, K, t0, a, b, M, L50, k_length, Fmort_overall)
+    dat_clim <- abundance_catch_at_age(max_age, N0, Linf_new_clim, Winf, k, t0, a, b, M, L50, k_length, Fmort_overall)
     ind_tempr <- stock_indicators(dat_clim, Linf, Winf)
     scnr_clim$size_indicator_Linf[i] <- ind_tempr$mlength_indicator
 
     ## Calculate YPR model with new Winf growth parameters
-    dat_clim <- abundance_catch_at_age(max_age, N0, Linf, Winf_new_clim, K, t0, a, b, M, L50, k_length, Fmort_overall)  
+    dat_clim <- abundance_catch_at_age(max_age, N0, Linf, Winf_new_clim, k, t0, a, b, M, L50, k_length, Fmort_overall)  
     ind_tempr <- stock_indicators(dat_clim, Linf, Winf)
     scnr_clim$size_indicator_Winf[i] <- ind_tempr$mweight_indicator
 
     ## Calculate YPR model with new K growth parameters
-    dat_clim <- abundance_catch_at_age(max_age, N0, Linf, Winf, K_new_clim, t0, a, b, M, L50, k_length, Fmort_overall)
+    dat_clim <- abundance_catch_at_age(max_age, N0, Linf, Winf, k_new_clim, t0, a, b, M, L50, k_length, Fmort_overall)
     ind_tempr <- stock_indicators(dat_clim, Linf, Winf)
     scnr_clim$size_indicator_K[i] <- ind_tempr$mlength_indicator
-
+    
    }
  
-    #scnr_clim <- target_species[irow]
-    
-    
+        
     all_scnrs <- c(all_scnrs, list(scnr_clim))
 
 
@@ -103,11 +105,12 @@ for (irow in 1:n){
       #geom_line(aes(y = size_indicator_Linf), color = "black") +
       #geom_line(aes(y = size_indicator_Winf), color = "blue") +\
       geom_vline(xintercept = tempr_opt, linetype = 2) + 
+      #geom_hline(yintercept = k_opt, linetype = 2) +
       geom_line(aes(y = size_indicator_K), color = "red") +
       labs(title = target_species, x = "Temperature", y = "Size indicator") 
 
  gall <- c(gall, list(g2))
-
+  
 }
 
 gall 
