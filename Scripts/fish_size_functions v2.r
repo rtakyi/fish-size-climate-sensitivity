@@ -8,17 +8,12 @@ k_tempr <- function(tempr, tempr_max, tempr_min, tempr_opt, k_opt){
     return(growth_coef_tempr)
 }
 
-## simulate growth performance: source: Kielbassa et al. 2010; Mallet et al. 1999
-#growth_per_tempr <- function(k, Linf){
-    #gr_pr <- log10(k) * log10(Linf)
-    #return(gr_pr)
-#}
 
 ##  simulate temperature effect on asymptotic length and weight: source: Kielbassa et al. 2010; Mallet et al. 1999
-#Linf_tempr <- function(growth_per_tempr, k_tempr){
-    #asymp_L_tempr <- sqrt((10^(growth_per_tempr)) / (k_tempr))
-    #return(asymp_L_tempr)
-#}
+Linf_tempr <- function(growth_per_tempr, k_tempr){
+    asymp_L_tempr <- sqrt((10^(growth_per_tempr)) / (k_tempr))
+    return(asymp_L_tempr)
+}
     
 ## simulate logisitic selectivity
 logistic_selectivity <- function(length, L50, k_length, Fmort_fully_selected){

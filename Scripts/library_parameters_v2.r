@@ -16,7 +16,7 @@ source("Scripts/fish_size_functions v2.R")
 # Parameters
 case_study_parameters <- read.csv("Parameters/case_study_species_parameters1.csv")
 
-target_species <- case_study_parameters[case_study_parameters$species == "Lutjanus fulgens" & case_study_parameters$id == "lf",]
+target_species <- case_study_parameters[case_study_parameters$species == "Lutjanus sebae" & case_study_parameters$id == "ls",]
 
 n <- nrow(target_species)
 
@@ -28,11 +28,11 @@ n <- nrow(target_species)
 tempr <- seq(4, 30, by = 0.1) # temperature range (made-up numbers)
 tempr_min <- 4 # minimum temperature (made-up number)
 tempr_max <- 30 # maximum temperature (made-up number)
-tempr_opt <- 20 # optimal temperature (made-up number)
+tempr_opt <- 24 # optimal temperature (made-up number)
 k_opt <- 0.3 # optimal growth coefficient (made-up number)
 scnr_tempr <- length(tempr)
 #ipcc_tempr_scnr <- seq(1.5, 4, by = 0.1) # temperature scenario 
-#ipccC_scnr <- length(ipcc_tempr_scnr)
+#ipcc_scnr <- length(ipcc_tempr_scnr)
 
 # Calculate indicators for each species
 
@@ -63,6 +63,7 @@ for (irow in 1:n){
   a <- 0.001 # growth performance index - this is scaling that determines units of weight. The unit of the weight is in grams, so a = 0.001
   b <- 3 # growth performance index
   Fmort_overall <- target_species$Fmort.[irow]
+  growth_per_tempr <- 3 # growth per temperature, made-up number
 
   k_length <- 0.2 # slope of the logistic curve
   N0 <- 42000 # initial abundance of fish in tonnes
@@ -76,7 +77,7 @@ for (irow in 1:n){
     k_new_clim <- max(c(0, k_new_clim))
 
     #update this with linf model... 
-    Linf_new_clim <- Linf #_tempr(growth_per_tempr, k_new_clim)
+    Linf_new_clim <- Linf_tempr(growth_per_tempr, k_new_clim)
     Winf_new_clim <- #Winf #* K_tempr(tempr[i], tempr_max, tempr_min, tempr_opt, K_opt)
 
     ## Calculate YPR model with new Linf growth parameters
@@ -98,7 +99,7 @@ for (irow in 1:n){
  
         
     all_scnrs <- c(all_scnrs, list(scnr_clim))
-
+print(scnr_clim)
 
     # Plot results
     g2 <- ggplot(scnr_clim, aes(x = tempr)) +
@@ -118,3 +119,5 @@ gall
 wrap_plots(gall)
 
 all_scnr_data <- bind_rows(all_scnrs)
+
+#ggsave(g2, filename = "Shared/Outputs/Lutjanus_sebae.tiff", width = 6, height = 6, dpi = 300)
