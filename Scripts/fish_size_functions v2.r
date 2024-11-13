@@ -9,11 +9,13 @@ k_tempr <- function(tempr, tempr_max, tempr_min, tempr_opt, k_opt){
 }
 
 
-##  simulate temperature effect on asymptotic length and weight: source: Kielbassa et al. 2010; Mallet et al. 1999
-Linf_tempr <- function(growth_per_tempr, k_tempr){
+##  simulate temperature effect on growth performance and asymptotic length: source: Kielbassa et al. 2010; Mallet et al. 1999
+Linf_tempr <- function(k, Linf, k_tempr){
+    growth_per_tempr <- log10(k) + (2 * log10(Linf))
     asymp_L_tempr <- sqrt((10^(growth_per_tempr)) / (k_tempr))
     return(asymp_L_tempr)
 }
+
     
 ## simulate logisitic selectivity
 logistic_selectivity <- function(length, L50, k_length, Fmort_fully_selected){
@@ -21,6 +23,7 @@ logistic_selectivity <- function(length, L50, k_length, Fmort_fully_selected){
     adjust_selectivity <- selectivity * Fmort_fully_selected
     return(adjust_selectivity)
 }  
+
 
 ## simulate length at age using the von Bertalanffy growth function
 VBGF_length <- function(age, Linf, k, t0) {

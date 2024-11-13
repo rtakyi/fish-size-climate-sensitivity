@@ -44,7 +44,7 @@ for (irow in 1:n){
   ## Add climate change impacts on Linf, Winf and K
   #one way to get all fmors and all temprs
   #scnr_clim <- expand.grid(tempr = tempr, Fmort = Fmort)
-  # scnr_clim$size_indicator_Linf <- NA
+  #scnr_clim$size_indicator_Linf <- NA
   
   scnr_clim <- data.frame(tempr = tempr, 
                           size_indicator_Linf = NA,
@@ -67,7 +67,7 @@ for (irow in 1:n){
   a <- 0.001 # growth performance index - this is scaling that determines units of weight. The unit of the weight is in grams, so a = 0.001
   b <- 3 # growth performance index
   Fmort_overall <- target_species$Fmort.[irow]
-  growth_per_tempr <- 3 # growth per temperature, made-up number
+  #growth_per_tempr <- 3 # growth per temperature, made-up number
 
   k_length <- 0.2 # slope of the logistic curve
   N0 <- 42000 # initial abundance of fish in tonnes
@@ -81,7 +81,7 @@ for (irow in 1:n){
     k_new_clim <- max(c(0, k_new_clim))
 
     #update this with linf model... 
-    Linf_new_clim <- Linf_tempr(growth_per_tempr, k_new_clim)
+    Linf_new_clim <- Linf_tempr(k, Linf, k_new_clim)
     Winf_new_clim <- #Winf #* K_tempr(tempr[i], tempr_max, tempr_min, tempr_opt, K_opt)
 
     ## Calculate YPR model with new Linf growth parameters
