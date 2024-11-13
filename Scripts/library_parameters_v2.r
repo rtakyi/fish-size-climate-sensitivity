@@ -42,6 +42,10 @@ gall <- all_scnrs <- NULL
 # Loop through each species
 for (irow in 1:n){
   ## Add climate change impacts on Linf, Winf and K
+  #one way to get all fmors and all temprs
+  #scnr_clim <- expand.grid(tempr = tempr, Fmort = Fmort)
+  # scnr_clim$size_indicator_Linf <- NA
+  
   scnr_clim <- data.frame(tempr = tempr, 
                           size_indicator_Linf = NA,
                           size_indicator_Winf = NA,
