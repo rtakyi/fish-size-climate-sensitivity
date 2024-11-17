@@ -16,23 +16,18 @@ source("Scripts/fish_size_functions v2.R")
 # Parameters
 case_study_parameters <- read.csv("Parameters/case_study_species_parameters1.csv")
 
-target_species <- case_study_parameters[case_study_parameters$species == "Lutjanus sebae" & case_study_parameters$id == "ls",]
+target_species <- case_study_parameters[case_study_parameters$species == "Sardinella aurita" & case_study_parameters$id == "sa", ]
 
 n <- nrow(target_species)
 
-# Parameters for scenarios of changes in fish growth due to climate change
-#multiple_tempr <- seq(1.5, 4, by = 0.1) # temperatures of 1.5oC, 2oC and 4oC anomalise from the IPCC CMIP6 projections regarding (source: https://www.ipcc.ch/report/ar6/wg1/downloads/factsheets/IPCC_AR6_WGI_Regional_Fact_Sheet_Australasia.pdf)
-#tempr_coef <- 0.02 #temperature coefficient for growth (Cheung et al 2013) (Pauly 1980) (Portner and Peck 2010)
-#scnr_tempr <- length(multiple_tempr)
-
+# Parameters for scenarios of changes in temperature, optimum temperature and growth performance due to climate change
 tempr <- seq(4, 30, by = 0.1) # temperature range (made-up numbers)
 tempr_min <- 4 # minimum temperature (made-up number)
 tempr_max <- 30 # maximum temperature (made-up number)
-tempr_opt <- 24 # optimal temperature (made-up number)
+tempr_opt <- c(20, 21.5, 22, 24) # optimal temperature based on ipcc (CMIP6) projections (source: https://www.ipcc.ch/report/ar6/wg1/downloads/factsheets/IPCC_AR6_WGI_Regional_Fact_Sheet_Australasia.pdf)
 k_opt <- 0.3 # optimal growth coefficient (made-up number)
+Fmort <- target_species$Fmort.[1] # fishing mortality rate 
 scnr_tempr <- length(tempr)
-#ipcc_tempr_scnr <- seq(1.5, 4, by = 0.1) # temperature scenario 
-#ipcc_scnr <- length(ipcc_tempr_scnr)
 
 # Calculate indicators for each species
 
@@ -43,14 +38,12 @@ gall <- all_scnrs <- NULL
 for (irow in 1:n){
   ## Add climate change impacts on Linf, Winf and K
   #one way to get all fmors and all temprs
-  #scnr_clim <- expand.grid(tempr = tempr, Fmort = Fmort)
-  #scnr_clim$size_indicator_Linf <- NA
+  scnr_clim <- expand.grid(tempr = tempr, Fmort = Fmort, target_species = target_species$species[irow])
   
-  scnr_clim <- data.frame(tempr = tempr, 
-                          size_indicator_Linf = NA,
-                          size_indicator_Winf = NA,
-                          size_indicator_K = NA)
-  
+  scnr_clim$size_indicator_Linf <- NA
+  scnr_clim$size_indicator_Winf <- NA
+  scnr_clim$size_indicator_K <- NA
+ 
   
   scnr_clim$size_indicator_Linf <- numeric(scnr_tempr)
   scnr_clim$size_indicator_Winf <- numeric(scnr_tempr)
@@ -67,7 +60,7 @@ for (irow in 1:n){
   a <- 0.001 # growth performance index - this is scaling that determines units of weight. The unit of the weight is in grams, so a = 0.001
   b <- 3 # growth performance index
   Fmort_overall <- target_species$Fmort.[irow]
-  #growth_per_tempr <- 3 # growth per temperature, made-up number
+  
 
   k_length <- 0.2 # slope of the logistic curve
   N0 <- 42000 # initial abundance of fish in tonnes
@@ -82,7 +75,7 @@ for (irow in 1:n){
 
     #update this with linf model... 
     Linf_new_clim <- Linf_tempr(k, Linf, k_new_clim)
-    Winf_new_clim <- #Winf #* K_tempr(tempr[i], tempr_max, tempr_min, tempr_opt, K_opt)
+    Winf_new_clim <- Winf * (Linf_new_clim/Linf)^3
 
     ## Calculate YPR model with new Linf growth parameters
     dat_clim <- abundance_catch_at_age(max_age, N0, Linf_new_clim, Winf, k, t0, a, b, M, L50, k_length, Fmort_overall)
@@ -103,22 +96,23 @@ for (irow in 1:n){
  
         
     all_scnrs <- c(all_scnrs, list(scnr_clim))
+
 print(scnr_clim)
 
     # Plot results
     g2 <- ggplot(scnr_clim, aes(x = tempr)) +
       #geom_line(aes(y = size_indicator_Linf), color = "black") +
-      #geom_line(aes(y = size_indicator_Winf), color = "blue") +\
+      #geom_line(aes(y = size_indicator_Winf), color = "blue") +
       geom_vline(xintercept = tempr_opt, linetype = 2) + 
       #geom_hline(yintercept = k_opt, linetype = 2) +
       geom_line(aes(y = size_indicator_K), color = "red") +
-      labs(title = target_species, x = "Temperature", y = "Size indicator") 
+      labs(title = target_species$species, x = "Temperature", y = "Size indicator") 
 
  gall <- c(gall, list(g2))
   
 }
 
-gall 
+gall
 
 wrap_plots(gall)
 

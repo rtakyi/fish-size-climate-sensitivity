@@ -16,7 +16,7 @@ Linf_tempr <- function(k, Linf, k_tempr){
     return(asymp_L_tempr)
 }
 
-    
+     
 ## simulate logisitic selectivity
 logistic_selectivity <- function(length, L50, k_length, Fmort_fully_selected){
     selectivity <- 1 / (1 + exp(-k_length * (length - L50)))
