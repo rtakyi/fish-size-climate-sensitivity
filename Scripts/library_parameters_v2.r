@@ -5,10 +5,12 @@ rm(list = ls())
 library(TropFishR)
 library(tidyverse)
 library(patchwork)
+library(reshape2)
 
 # Set theme for output plots
 theme_set(theme_classic())
-theme_update(axis.text.x = element_text(colour = "black", size = 12), axis.text.y = element_text(colour = "black", size = 12), axis.title = element_text(size = 12))
+theme_update(axis.text.x = element_text(colour = "black", size = 12), 
+              axis.text.y = element_text(colour = "black", size = 12), axis.title = element_text(size = 12))
 
 # Load functions
 source("Scripts/fish_size_functions v2.R")
@@ -21,13 +23,14 @@ target_species <- case_study_parameters[case_study_parameters$species == "Sardin
 n <- nrow(target_species)
 
 # Parameters for scenarios of changes in temperature, optimum temperature and growth performance due to climate change
-tempr <- seq(4, 30, by = 0.1) # temperature range (made-up numbers)
+tempr <- seq(4, 40, by = 0.1) # temperature range (made-up numbers)
 tempr_min <- 4 # minimum temperature (made-up number)
-tempr_max <- 30 # maximum temperature (made-up number)
-tempr_opt <- c(20, 21.5, 22, 24) # optimal temperature based on ipcc (CMIP6) projections (source: https://www.ipcc.ch/report/ar6/wg1/downloads/factsheets/IPCC_AR6_WGI_Regional_Fact_Sheet_Australasia.pdf)
+tempr_max <- 40 # maximum temperature (made-up number)
+tempr_opt <- c(28, 29.5, 30, 32) # optimal temperature based on ipcc (CMIP6) projections (source: Sohou et al. 2020; https://www.ipcc.ch/report/ar6/wg1/downloads/factsheets/IPCC_AR6_WGI_Regional_Fact_Sheet_Australasia.pdf)
 k_opt <- 0.3 # optimal growth coefficient (made-up number)
 Fmort <- target_species$Fmort.[1] # fishing mortality rate 
 scnr_tempr <- length(tempr)
+phi_1 <- 0.0438 # growth performance per degree change in temperature (source: Kielbassa et al. 2010; Mallet et al. 1999)
 
 # Calculate indicators for each species
 
@@ -75,7 +78,7 @@ for (irow in 1:n){
 
     #update this with linf model... 
     Linf_new_clim <- Linf_tempr(k, Linf, k_new_clim)
-    Winf_new_clim <- Winf * (Linf_new_clim/Linf)^3
+    Winf_new_clim <- Winf_tempr(Winf, Linf, Linf_new_clim)
 
     ## Calculate YPR model with new Linf growth parameters
     dat_clim <- abundance_catch_at_age(max_age, N0, Linf_new_clim, Winf, k, t0, a, b, M, L50, k_length, Fmort_overall)
@@ -97,9 +100,10 @@ for (irow in 1:n){
         
     all_scnrs <- c(all_scnrs, list(scnr_clim))
 
-print(scnr_clim)
+print(all_scnrs)
 
-    # Plot results
+    # Plot results with all scenarios in one graph
+    
     g2 <- ggplot(scnr_clim, aes(x = tempr)) +
       #geom_line(aes(y = size_indicator_Linf), color = "black") +
       #geom_line(aes(y = size_indicator_Winf), color = "blue") +
