@@ -112,7 +112,7 @@ for (irow in 1:n){
       geom_line(aes(y = size_indicator_K), color = "red") +
       labs(title = target_species$species, x = "Temperature", y = "Size indicator") 
 
- gall <- c(gall, list(g2))
+ gall <- c(gall, list(g2, target_species$species[irow]))
   
 }
 
