@@ -81,10 +81,11 @@ for (irow in 1:n){
 
     #update this with linf model... 
     Linf_new_clim <- Linf_tempr(k, Linf, k_new_clim)
-    Winf_new_clim <- Winf_tempr(Winf, Linf, Linf_new_clim)
+    Winf_new_clim <- a*Linf_new_clim^b
+    # Winf_new_clim <- Winf_tempr(Winf, Linf, Linf_new_clim)
 
     ## Calculate YPR model with new Linf growth parameters
-    dat_clim <- abundance_catch_at_age(max_age, N0, Linf_new_clim, Winf, k_new_clim, t0, a, b, M, L50, k_length, Fmort)
+    dat_clim <- abundance_catch_at_age(max_age, N0, Linf_new_clim, Winf_new_clim, k_new_clim, t0, a, b, M, L50, k_length, Fmort)
     ind_tempr <- stock_indicators(dat_clim, Linf, Winf)
     scnr_clim$size_indicator_Linf[i] <- ind_tempr$mlength_indicator
     scnr_clim$Fmort <- Fmort
@@ -130,6 +131,7 @@ all_scnr_data <- bind_rows(all_scnrs)
 ggplot(all_scnr_data) + 
   aes(x = tempr, y = size_indicator_Linf, color = Fmort, group = Fmort) +
   geom_line() +
+  facet_wrap(~target_species) + 
   geom_vline(xintercept = tempr_opt, linetype = 2) +
   geom_vline(xintercept = IPCC_scnrs, linetype = 2, col = "grey") +
   labs(title = "Sensitivity of size indicators to changes in Linf due to climate change", x = "Temperature", y = "Size indicator") 
