@@ -51,7 +51,9 @@ for (irow in 1:n){
   scnr_clim$size_indicator_Linf <- numeric(scnr_tempr)
   scnr_clim$size_indicator_Winf <- numeric(scnr_tempr)
   scnr_clim$size_indicator_K <- numeric(scnr_tempr)
-
+  #scnr_clim$scenario_id <- rep(1:3, each = scnr_tempr / 3)
+  #scnr_clim$scenario_species <- rep(target_species$species[irow], scnr_tempr)
+  scnr_clim$scenario_id <- rep(target_species$id[irow], scnr_tempr)
   # Fish biology parameters
   Linf <- target_species$Linf..cm.[irow] 
   Winf <- target_species$Winf..g.[irow]
@@ -78,7 +80,10 @@ for (irow in 1:n){
 
     #update this with linf model... 
     Linf_new_clim <- Linf_tempr(k, Linf, k_new_clim)
+    
     Winf_new_clim <- Winf_tempr(Winf, Linf, Linf_new_clim)
+    
+    Winf_new_clim <- Winf_new_clim / 1000 
 
     ## Calculate YPR model with new Linf growth parameters
     dat_clim <- abundance_catch_at_age(max_age, N0, Linf_new_clim, Winf, k, t0, a, b, M, L50, k_length, Fmort_overall)
@@ -98,28 +103,135 @@ for (irow in 1:n){
    }
  
         
-    all_scnrs <- c(all_scnrs, list(scnr_clim))
+    #all_scnrs <- c(all_scnrs, list(scnr_clim))
+    all_scnrs <- rbind(all_scnrs, scnr_clim)
 
 
 
     # Plot results with all scenarios in one graph
     
-    g2 <- ggplot(scnr_clim, aes(x = tempr)) +
+    #g2 <- ggplot(scnr_clim, aes(x = tempr)) +
       #geom_line(aes(y = size_indicator_Linf), color = "black") +
       #geom_line(aes(y = size_indicator_Winf), color = "blue") +
-      geom_vline(xintercept = tempr_opt, linetype = 2) + 
+      #geom_vline(xintercept = tempr_opt, linetype = 2) + 
       #geom_hline(yintercept = k_opt, linetype = 2) +
-      geom_line(aes(y = size_indicator_K), color = "red") +
-      labs(title = target_species$species, x = "Temperature", y = "Size indicator") 
+      #geom_line(aes(y = size_indicator_K), color = "red") +
+      #labs(title = target_species$species, x = "Temperature", y = "Size indicator") 
 
- gall <- c(gall, list(g2))
+ #gall <- c(gall, list(g2))
   
 }
 
-gall
+# Convert list columns to vectors
+#all_scnrs$size_indicator_Linf <- unlist(all_scnrs$size_indicator_Linf)
+#all_scnrs$size_indicator_Winf <- unlist(all_scnrs$size_indicator_Winf)
+#all_scnrs$size_indicator_K <- unlist(all_scnrs$size_indicator_K)
 
-wrap_plots(gall)
+# Ensure all_scnrs is a data frame
+all_scnrs <- as.data.frame(all_scnrs)
 
-all_scnr_data <- bind_rows(all_scnrs)
+# Apply pivot_longer
+#all_scnrs_long <- all_scnrs %>%
+  #pivot_longer(
+    #cols = size_indicator_K,
+    #names_to = "indicator",
+    #values_to = "value"
+  #)
+
+#all_scnrs_long <- all_scnrs %>%
+  #pivot_longer(
+    #cols = c(size_indicator_K),
+    #names_to = "indicator",
+    #values_to = "value"
+  #)
+
+# Pivot the data
+all_scnrs_long <- all_scnrs %>%
+  pivot_longer(
+    cols = c(size_indicator_Linf, size_indicator_Winf, size_indicator_K),
+    names_to = "indicator",
+    values_to = "value"
+  )
+
+
+
+# Create separate plots
+plot_Linf <- ggplot(all_scnrs_long %>% filter(indicator == "size_indicator_Linf"), 
+                    aes(x = tempr, y = value, color = as.factor(scenario_id))) +
+  geom_line() +
+  labs(title = "Size Indicator Linf vs Temperature",
+       x = "Temperature (°C)",
+       y = "Size Indicator Linf",
+       color = "Scenario") +
+  theme_minimal()
+
+plot_Winf <- ggplot(all_scnrs_long %>% filter(indicator == "size_indicator_Winf"), 
+                    aes(x = tempr, y = value, color = as.factor(scenario_id))) +
+  geom_line() +
+  labs(title = "Size Indicator Winf vs Temperature",
+       x = "Temperature (°C)",
+       y = "Size Indicator Winf",
+       color = "Scenario") +
+  theme_minimal()
+
+plot_K <- ggplot(all_scnrs_long %>% filter(indicator == "size_indicator_K"), 
+                 aes(x = tempr, y = value, color = as.factor(scenario_id))) +
+  geom_line() +
+  labs(title = "Size Indicator K vs Temperature",
+       x = "Temperature (°C)",
+       y = "Size Indicator K",
+       color = "Scenario") +
+  theme_minimal()
+
+# Combine the plots
+combined_plot <- plot_Linf / plot_Winf / plot_K
+
+# Display the combined plot
+combined_plot
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Plot the data
+#ggplot(all_scnrs_long, aes(x = tempr, y = value, color = indicator)) +
+  #geom_line() +
+  #labs(title = "Size Indicators vs Temperature",
+       #x = "Temperature (°C)",
+       #y = "Size Indicator Value") +
+  #theme_minimal()
+
+
+#ggplot(all_scnrs_long, aes(x = tempr, y = value, color = as.factor(scenario_id))) +
+  #geom_line() +
+  #labs(title = "Size Indicators vs Temperature",
+       #x = "Temperature (°C)",
+       #y = "Size Indicator Value",
+       #color = "Scenario") +
+  #theme_minimal())
+
+
+# Plot the data
+#ggplot(all_scnrs_long, aes(x = tempr, y = value, color = interaction(indicator, scenario_id))) +
+  #geom_line() +
+  #labs(title = "Size Indicators vs Temperature",
+       #x = "Temperature (°C)",
+       #y = "Size Indicator Value",
+       #color = "Indicator and Scenario") +
+  #theme_minimal()
+
+#gall
+
+#wrap_plots(gall)
+
+#all_scnr_data <- bind_rows(all_scnrs)
 
 #ggsave(g2, filename = "Shared/Outputs/Lutjanus_sebae.tiff", width = 6, height = 6, dpi = 300)
