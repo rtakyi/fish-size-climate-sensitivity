@@ -101,3 +101,8 @@ indicators <- with(dat, {
 }
 
 
+# Define a custom function to save the plot and return the filename
+save_plot <- function(plot, filename, width, height, dpi) {
+  ggsave(plot, filename = filename, width = width, height = height, dpi = dpi)
+  return(filename)
+}

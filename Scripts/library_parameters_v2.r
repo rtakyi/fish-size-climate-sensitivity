@@ -18,8 +18,9 @@ source("Scripts/fish_size_functions v2.R")
 # Parameters
 case_study_parameters <- read.csv("Parameters/case_study_species_parameters1.csv")
 
-target_species <- case_study_parameters[case_study_parameters$species == "Sardinella aurita" & case_study_parameters$id == "sa", ]
+target_species <- case_study_parameters[case_study_parameters$species == "Sardinella maderensis" & case_study_parameters$id == "sm", ]
 
+# Number of scenarios
 n <- nrow(target_species)
 
 # Parameters for scenarios of changes in temperature, optimum temperature and growth performance due to climate change
@@ -27,20 +28,18 @@ tempr <- seq(18, 35, by = 0.1) # temperature range (made-up numbers)
 tempr_min <- 4 # minimum temperature (made-up number)
 tempr_max <- 40 # maximum temperature (made-up number)
 tempr_opt <- 28
-IPCC_scnrs <- tempr_opt + c(1, 2, 3)
+IPCC_scnrs <- tempr_opt + c(1.5, 2, 4) # optimal temperature based on ipcc (CMIP6) projections (source: Sohou et al. 2020; https://www.ipcc.ch/report/ar6/wg1/downloads/factsheets/IPCC_AR6_WGI_Regional_Fact_Sheet_Australasia.pdf)
 
-#c(28, 29.5, 30, 32) # optimal temperature based on ipcc (CMIP6) projections (source: Sohou et al. 2020; https://www.ipcc.ch/report/ar6/wg1/downloads/factsheets/IPCC_AR6_WGI_Regional_Fact_Sheet_Australasia.pdf)
+ 
 k_opt <- 0.3 # optimal growth coefficient (made-up number)
 scnr_tempr <- length(tempr)
 phi_1 <- 0.0438 # growth performance per degree change in temperature (source: Kielbassa et al. 2010; Mallet et al. 1999)
 
 # Calculate indicators for each species
 
-
-
-
 # Loop through each species
 gall <- all_scnrs <- NULL
+
 for (irow in 1:n){
   ## Add climate change impacts on Linf, Winf and K
   #one way to get all fmors and all temprs
@@ -80,7 +79,7 @@ for (irow in 1:n){
     k_new_clim <- max(c(0, k_new_clim))
 
     #update this with linf model... 
-    Linf_new_clim <- Linf_tempr(k, Linf, k_new_clim)
+    Linf_new_clim <- Linf_tempr(k, Linf, k_new_clim, phi_1)
     Winf_new_clim <- a*Linf_new_clim^b
     # Winf_new_clim <- Winf_tempr(Winf, Linf, Linf_new_clim)
 
@@ -114,10 +113,10 @@ for (irow in 1:n){
       geom_vline(xintercept = tempr_opt, linetype = 2) + 
       #geom_hline(yintercept = k_opt, linetype = 2) +
       # geom_line(aes(y = size_indicator_K), color = "red") +
-      labs(title = target_species$species, x = "Temperature", y = "Size indicator") 
+      labs(title = target_species$species, x = "Temperature", y = "Size indicator")
 
-    
-    
+
+
  gall <- c(gall, list(g2))#, target_species$species[irow]))
   
 }
@@ -126,14 +125,40 @@ gall
 
 wrap_plots(gall)
 
+
+
+
 all_scnr_data <- bind_rows(all_scnrs)
 
-ggplot(all_scnr_data) + 
-  aes(x = tempr, y = size_indicator_Linf, color = Fmort, group = Fmort) +
-  geom_line() +
-  facet_wrap(~target_species) + 
-  geom_vline(xintercept = tempr_opt, linetype = 2) +
-  geom_vline(xintercept = IPCC_scnrs, linetype = 2, col = "grey") +
-  labs(title = "Sensitivity of size indicators to changes in Linf due to climate change", x = "Temperature", y = "Size indicator") 
+g3 <- ggplot(all_scnr_data) + 
+      aes(x = tempr, y = size_indicator_Linf, color = Fmort, group = Fmort) +
+      geom_line() +
+      facet_wrap(~target_species) + 
+      geom_vline(xintercept = tempr_opt, linetype = 2) +
+      geom_vline(xintercept = IPCC_scnrs, linetype = 2, col = "grey") +
+      labs(title = "Sensitivity of size indicators to changes in Linf due to climate change", x = "Temperature", y = "Size indicator") 
   
-#ggsave(g2, filename = "Shared/Outputs/Lutjanus_sebae.tiff", width = 6, height = 6, dpi = 300)
+
+
+
+# Save the first plot and store the output filename in outpt1
+outpt1 <- save_plot(
+  wrap_plots(gall),
+  filename = paste0("Shared/Outputs/size_indicators_", target_species$species, "_plot1.tiff"),
+  width = 6,
+  height = 6,
+  dpi = 300
+)
+
+# Save the second plot and store the output filename in outpt2
+outpt2 <- save_plot(
+  g3,
+  filename = paste0("Shared/Outputs/size_indicators_", target_species$species, "_plot2.tiff"),
+  width = 6,
+  height = 6,
+  dpi = 300
+)
+
+# Print the output filenames
+print(outpt1)
+print(outpt2)
