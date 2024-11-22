@@ -18,7 +18,18 @@ source("Scripts/fish_size_functions v2.R")
 # Parameters
 case_study_parameters <- read.csv("Parameters/case_study_species_parameters1.csv")
 
-target_species <- case_study_parameters[case_study_parameters$species == "Sardinella maderensis" & case_study_parameters$id == "sm", ]
+#target_species <- case_study_parameters[case_study_parameters$species == "Sardinella aurita" & case_study_parameters$id == "sa1", ]
+
+# Subset the data frame for the target species
+target_species_list <- case_study_parameters[case_study_parameters$species == "Sardinella aurita", ]
+
+# Loop through each unique ID for the target species
+for (id in unique(target_species_list$id)) {
+  # Filter data for the current ID
+  target_species <- target_species_list[target_species_list$id == id, ]
+  
+}
+
 
 # Number of scenarios
 n <- nrow(target_species)
@@ -88,15 +99,7 @@ for (irow in 1:n){
     ind_tempr <- stock_indicators(dat_clim, Linf, Winf)
     scnr_clim$size_indicator_Linf[i] <- ind_tempr$mlength_indicator
     scnr_clim$Fmort <- Fmort
-    # ## Calculate YPR model with new Winf growth parameters
-    # dat_clim <- abundance_catch_at_age(max_age, N0, Linf, Winf_new_clim, k, t0, a, b, M, L50, k_length, Fmort_overall)  
-    # ind_tempr <- stock_indicators(dat_clim, Linf, Winf)
-    # scnr_clim$size_indicator_Winf[i] <- ind_tempr$mweight_indicator
-    # 
-    # ## Calculate YPR model with new K growth parameters
-    # dat_clim <- abundance_catch_at_age(max_age, N0, Linf, Winf, k_new_clim, t0, a, b, M, L50, k_length, Fmort_overall)
-    # ind_tempr <- stock_indicators(dat_clim, Linf, Winf)
-    # scnr_clim$size_indicator_K[i] <- ind_tempr$mlength_indicator
+    #scnr_clim$size_indicator_Winf[i] <- ind_tempr$mweight_indicator
     
    }
  
@@ -127,7 +130,6 @@ wrap_plots(gall)
 
 
 
-
 all_scnr_data <- bind_rows(all_scnrs)
 
 g3 <- ggplot(all_scnr_data) + 
@@ -136,29 +138,20 @@ g3 <- ggplot(all_scnr_data) +
       facet_wrap(~target_species) + 
       geom_vline(xintercept = tempr_opt, linetype = 2) +
       geom_vline(xintercept = IPCC_scnrs, linetype = 2, col = "grey") +
-      labs(title = "Sensitivity of size indicators to changes in Linf due to climate change", x = "Temperature", y = "Size indicator") 
-  
+      labs(title = paste("Sensitivity of size indicators to changes in Linf due to climate change", 
+                target_species$species[1], "ID:", id), x = "Temperature", y = "Size indicator") + 
+                scale_colour_continuous(trans = "reverse")
+
+ 
+
+      
+      #labs(title = "Sensitivity of size indicators to changes in Linf due to climate change", 
+          #x = "Temperature", y = "Size indicator") + scale_colour_continuous(trans = "reverse")
 
 
+# Save plot
+#ggsave(g3, filename = paste0("Shared/Outputs/size_indicator_sensitivity_", target_species$species,
+         #"_", target_species$id, ".tiff"), width = 10, height = 6, units = "in", dpi = 300)
 
-# Save the first plot and store the output filename in outpt1
-outpt1 <- save_plot(
-  wrap_plots(gall),
-  filename = paste0("Shared/Outputs/size_indicators_", target_species$species, "_plot1.tiff"),
-  width = 6,
-  height = 6,
-  dpi = 300
-)
-
-# Save the second plot and store the output filename in outpt2
-outpt2 <- save_plot(
-  g3,
-  filename = paste0("Shared/Outputs/size_indicators_", target_species$species, "_plot2.tiff"),
-  width = 6,
-  height = 6,
-  dpi = 300
-)
-
-# Print the output filenames
-print(outpt1)
-print(outpt2)
+ggsave(plot = g3, filename = paste0("Shared/Outputs/size_indicator_sensitivity_", 
+    target_species$species[1], "_", target_species$id[1], ".tiff"), width = 10, height = 6, units = "in", dpi = 300)
