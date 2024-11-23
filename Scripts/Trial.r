@@ -1,4 +1,5 @@
 
+
 rm(list = ls())
 
 # Load libraries
@@ -18,6 +19,8 @@ source("Scripts/fish_size_functions v2.R")
 # Parameters
 case_study_parameters <- read.csv("Parameters/case_study_species_parameters1.csv")
 
+#target_species <- case_study_parameters[case_study_parameters$species == "Sardinops sagax" &
+                #case_study_parameters$id == "ss", ]
 
 target_species <- case_study_parameters
 

@@ -1,0 +1,15 @@
+species,id,Linf (cm),Winf (g),growth_coef (yr-1),M (yr-1), t0 (yr),max_age (yr),L50 (cm),Fmort (yr-1)
+Sardinella aurita,sa,34.21,800,0.39,0.79,-1.34,5,13,1.62
+Sardinella aurita,sa,34.21,800,0.39,0.79,-1.34,5,13,2.41
+Sardinella aurita,sa,34.21,800,0.39,0.79,-1.34,5,13,1.8
+Sardinella aurita,sa,34.21,800,0.39,0.79,-1.34,5,13,0.09
+Sardinella aurita,sa,34.21,800,0.39,0.79,-1.34,5,13,0.35
+Sardinella aurita,sa,34.21,800,0.39,0.79,-1.34,5,13,0.24
+Sardinella aurita,sa,34.21,800,0.39,0.79,-1.34,5,13,0.43
+Sardinella maderensis,sm,27.25,269.5,1.26,0.74,-2.88,7.51,24.5,1.62
+Sardinella maderensis,sm,27.25,269.5,1.26,0.74,-2.88,7.51,24.5,2.41
+Sardinella maderensis,sm,27.25,269.5,1.26,0.74,-2.88,7.51,24.5,1.8
+Sardinella maderensis,sm,27.25,269.5,1.26,0.74,-2.88,7.51,24.5,0.09
+Sardinella maderensis,sm,27.25,269.5,1.26,0.74,-2.88,7.51,24.5,0.35
+Sardinella maderensis,sm,27.25,269.5,1.26,0.74,-2.88,7.51,24.5,0.24
+Sardinella maderensis,sm,27.25,269.5,1.26,0.74,-2.88,7.51,24.5,0.43
