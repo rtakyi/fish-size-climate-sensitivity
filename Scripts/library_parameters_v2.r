@@ -105,7 +105,7 @@ for (irow in 1:n){
       geom_line(aes(y = size_indicator_Linf), color = "black") +
       #geom_line(aes(y = size_indicator_Winf), color = "blue") +
       geom_vline(xintercept = tempr_opt, linetype = 2) + 
-      #geom_hline(yintercept = k_opt, linetype = 2) +
+      geom_hline(yintercept = k_opt, linetype = 2) +
       # geom_line(aes(y = size_indicator_K), color = "red") +
       labs(title = target_species$species, x = "Temperature", y = "Size indicator")
 
@@ -129,6 +129,11 @@ g3 <- ggplot(all_scnr_data) +
       facet_wrap(~target_species) + 
       geom_vline(xintercept = tempr_opt, linetype = 2) +
       geom_vline(xintercept = IPCC_scnrs, linetype = 2, col = "grey") +
+      geom_hline(yintercept = k_opt, linetype = 2) +
+      annotate("text", x = tempr_opt, y = max(all_scnr_data$size_indicator_Linf), 
+               label = "tempr_opt", angle = 90, vjust = -0.5, hjust = 1, color = "black") +
+      annotate("text", x = min(all_scnr_data$tempr), y = k_opt, 
+               label = "k_opt", hjust = -0.2, vjust = 1.5, color = "black") +
       labs(title = "Sensitivity of size indicators to changes in Linf due to climate change", 
           x = "Temperature", y = "Size indicator") + scale_colour_continuous(trans = "reverse")
       
@@ -139,6 +144,10 @@ g3 <- ggplot(all_scnr_data) +
  
 
 # Save plot
-ggsave(g3, filename = paste0("Shared/Outputs/size_indicator_sensitivity_", target_species$species,
-         "_", target_species$id, ".tiff"), width = 6, height = 9, units = "in", dpi = 300)
+ggsave(g3, filename = paste0("Shared/Outputs/size_indicator_sensitivity", target_species$species, ".tiff"), width = 6, height = 9, units = "in", dpi = 300)
+
+
+
+#ggsave(g3, filename = paste0("Shared/Outputs/size_indicator_sensitivity_", target_species$species,
+         #"_", target_species$id, ".tiff"), width = 6, height = 9, units = "in", dpi = 300)
 
