@@ -33,7 +33,7 @@ tempr_opt <- 28
 IPCC_scnrs <- tempr_opt + c(1.5, 2, 4) # optimal temperature based on ipcc (CMIP6) projections (source: Sohou et al. 2020; https://www.ipcc.ch/report/ar6/wg1/downloads/factsheets/IPCC_AR6_WGI_Regional_Fact_Sheet_Australasia.pdf)
 
  
-k_opt <- 0.3 # optimal growth coefficient (made-up number)
+k_opt <- 0.3 # optimal growth coefficient (source: fishbase.se/manual/key%20facts.htm)
 scnr_tempr <- length(tempr)
 phi_1 <- 0.0438 # growth performance per degree change in temperature (source: Kielbassa et al. 2010; Mallet et al. 1999)
 
@@ -83,7 +83,7 @@ for (irow in 1:n){
     #update this with linf model... 
     Linf_new_clim <- Linf_tempr(k, Linf, k_new_clim, phi_1)
     Winf_new_clim <- a*Linf_new_clim^b
-    # Winf_new_clim <- Winf_tempr(Winf, Linf, Linf_new_clim)
+    
 
     ## Calculate YPR model with new Linf growth parameters
     dat_clim <- abundance_catch_at_age(max_age, N0, Linf_new_clim, Winf_new_clim, k_new_clim, t0, a, b, M, L50, k_length, Fmort)

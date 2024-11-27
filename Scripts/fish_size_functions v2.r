@@ -1,27 +1,5 @@
 
 
-## simulate temperature effect on growth coeffecients: source: Kielbassa et al. 2010; Mallet et al. 1999 
-k_tempr <- function(tempr, tempr_max, tempr_min, tempr_opt, k_opt){
-    growth_coef_tempr <- k_opt * ((tempr - tempr_min) * (tempr - tempr_max) /
-                                    ((tempr - tempr_min) * (tempr - tempr_max) - (tempr - tempr_opt)^2)
-                                  )
-    return(growth_coef_tempr)
-}
-
-
-##  simulate temperature effect on growth performance and asymptotic length: source: Kielbassa et al. 2010; Mallet et al. 1999
-Linf_tempr <- function(k, Linf, k_tempr, phi_1){
-    growth_per_tempr <- (log10(k) + (2 * log10(Linf))) + phi_1
-    asymp_L_tempr <- sqrt((10^(growth_per_tempr)) / (k_tempr))
-    return(asymp_L_tempr)
-}
-
-## simulate temperature effect on growth performance and asymptotic weight: source: Kielbassa et al. 2010; Mallet et al. 1999
-Winf_tempr <- function(Winf, Linf, Linf_tempr){
-    Winf_tempr_1 <- Winf * (Linf_tempr / Linf)^b 
-    return(Winf_tempr_1)
-}
-
 
 ## simulate logisitic selectivity
 logistic_selectivity <- function(length, L50, k_length, Fmort_fully_selected){
@@ -38,8 +16,8 @@ VBGF_length <- function(age, Linf, k, t0) {
 }
 
 ## simulate weight at age using the von Bertalanffy growth function : source: Geromont and Butterworth 2015
-VBGF_weight <- function(age, Winf, k, t0, a, b) {
-    weight_at_age <- a * (Winf * (1 - exp(-k * (age - t0))))^b
+VBGF_weight <- function(age, Linf, k, t0, a, b) {
+    weight_at_age <- a * (Linf * (1 - exp(-k * (age - t0))))^b
     return(weight_at_age)
 }
 
@@ -69,7 +47,7 @@ abundance_catch_at_age <- function(max_age, N0, Linf, Winf, k, t0, a, b, M, L50,
   datout$abundance[1] <- N0 #initial abundance at age 0
   age <- 0 :max_age
   datout$length <- VBGF_length(age, Linf, k, t0) #length at age
-  datout$weight <- VBGF_weight(age, Winf, k, t0, a, b) #weight at age
+  datout$weight <- VBGF_weight(age, Linf, k, t0, a, b) #weight at age
   datout$fmort_lengths <- logistic_selectivity(datout$length, L50, k_length, Fmort_fully_selected) #fishing mort at length
     for (i in 2:(max_age+1)){
     datout$abundance[i] <- datout$abundance[i-1]*exp((-M-datout$fmort_lengths[i]))
@@ -101,3 +79,24 @@ indicators <- with(dat, {
 }
 
 
+## simulate temperature effect on growth coeffecients: source: Kielbassa et al. 2010; Mallet et al. 1999 
+k_tempr <- function(tempr, tempr_max, tempr_min, tempr_opt, k_opt){
+    growth_coef_tempr <- k_opt * ((tempr - tempr_min) * (tempr - tempr_max) /
+                                    ((tempr - tempr_min) * (tempr - tempr_max) - (tempr - tempr_opt)^2)
+                                  )
+    return(growth_coef_tempr)
+}
+
+
+##  simulate temperature effect on growth performance and asymptotic length: source: Kielbassa et al. 2010; Mallet et al. 1999
+Linf_tempr <- function(k, Linf, k_tempr, phi_1){
+    growth_per_tempr <- (log10(k) + (2 * log10(Linf))) + phi_1
+    asymp_L_tempr <- sqrt((10^(growth_per_tempr)) / (k_tempr))
+    return(asymp_L_tempr)
+}
+
+## simulate temperature effect on growth performance and asymptotic weight: source: Kielbassa et al. 2010; Mallet et al. 1999
+Winf_tempr <- function(Winf, Linf, Linf_tempr){
+    Winf_tempr_1 <- Winf * (Linf_tempr / Linf)^b 
+    return(Winf_tempr_1)
+}
