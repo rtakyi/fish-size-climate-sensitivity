@@ -1,0 +1,64 @@
+species,id,Linf (cm),Winf (g),growth_coef (yr-1),M (yr-1), t0 (yr),max_age (yr),L50 (cm),Fmort (yr-1)
+S. maderensis,sm,39.12,630,0.7,0.9,-0.32,6.06,19.25,1.62
+S. maderensis,sm,39.12,630,0.7,0.9,-0.32,6.06,19.25,2.41
+S. maderensis,sm,39.12,630,0.7,0.9,-0.32,6.06,19.25,1.8
+S. maderensis,sm,39.12,630,0.7,0.9,-0.32,6.06,19.25,0.09
+S. maderensis,sm,39.12,630,0.7,0.9,-0.32,6.06,19.25,0.35
+S. maderensis,sm,39.12,630,0.7,0.9,-0.32,6.06,19.25,0.24
+S. maderensis,sm,39.12,630,0.7,0.9,-0.32,6.06,19.25,0.43
+Engraulis encrasicolus,ee,14.46,18.5,0.52, 1.08,-0.68,4.98,3.71,1.62
+Engraulis encrasicolus,ee,14.46,18.5,0.52, 1.09,-0.68,4.98,3.71,2.41
+Engraulis encrasicolus,ee,14.46,18.5,0.52, 1.10,-0.68,4.98,3.71,1.8
+Engraulis encrasicolus,ee,14.46,18.5,0.52, 1.11,-0.68,4.98,3.71,0.09
+Engraulis encrasicolus,ee,14.46,18.5,0.52, 1.12,-0.68,4.98,3.71,0.35
+Engraulis encrasicolus,ee,14.46,18.5,0.52, 1.13,-0.68,4.98,3.71,0.24
+Engraulis encrasicolus,ee,14.46,18.5,0.52, 1.14,-0.68,4.98,3.71,0.43
+Caranx crysos,cc,37.6,5100,0.41,0.65,-0.38,11,14.9,1.62
+Caranx crysos,cc,37.6,5100,0.41,0.65,-0.38,11,14.9,2.41
+Caranx crysos,cc,37.6,5100,0.41,0.65,-0.38,11,14.9,1.8
+Caranx crysos,cc,37.6,5100,0.41,0.65,-0.38,11,14.9,0.09
+Caranx crysos,cc,37.6,5100,0.41,0.65,-0.38,11,14.9,0.35
+Caranx crysos,cc,37.6,5100,0.41,0.65,-0.38,11,14.9,0.24
+Caranx crysos,cc,37.6,5100,0.41,0.65,-0.38,11,14.9,0.43
+Scomber colias,sc,42.5,695,0.28,0.7,-0.54,10,24.1,1.62
+Scomber colias,sc,42.5,695,0.28,0.7,-0.54,10,24.1,2.41
+Scomber colias,sc,42.5,695,0.28,0.7,-0.54,10,24.1,1.8
+Scomber colias,sc,42.5,695,0.28,0.7,-0.54,10,24.1,0.09
+Scomber colias,sc,42.5,695,0.28,0.7,-0.54,10,24.1,0.35
+Scomber colias,sc,42.5,695,0.28,0.7,-0.54,10,24.1,0.24
+Scomber colias,sc,42.5,695,0.28,0.7,-0.54,10,24.1,0.43
+Pseudotolithus senegalensis,ps,110.3,?,0.2,0.42,-0.59,15,22.8,1.62
+Pseudotolithus senegalensis,ps,111.3,?,0.2,0.42,-0.59,15,22.8,2.41
+Pseudotolithus senegalensis,ps,112.3,?,0.2,0.42,-0.59,15,22.8,1.8
+Pseudotolithus senegalensis,ps,113.3,?,0.2,0.42,-0.59,15,22.8,0.09
+Pseudotolithus senegalensis,ps,114.3,?,0.2,0.42,-0.59,15,22.8,0.35
+Pseudotolithus senegalensis,ps,115.3,?,0.2,0.42,-0.59,15,22.8,0.24
+Pseudotolithus senegalensis,ps,116.3,?,0.2,0.42,-0.59,15,22.8,0.43
+Sphyraena sphyraena,ss,69.9,3600,1.64,1.88,-0.48,12,39.3,1.62
+Sphyraena sphyraena,ss,69.9,3600,1.64,1.88,-0.48,12,39.3,2.41
+Sphyraena sphyraena,ss,69.9,3600,1.64,1.88,-0.48,12,39.3,1.8
+Sphyraena sphyraena,ss,69.9,3600,1.64,1.88,-0.48,12,39.3,0.09
+Sphyraena sphyraena,ss,69.9,3600,1.64,1.88,-0.48,12,39.3,0.35
+Sphyraena sphyraena,ss,69.9,3600,1.64,1.88,-0.48,12,39.3,0.24
+Sphyraena sphyraena,ss,69.9,3600,1.64,1.88,-0.48,12,39.3,0.43
+Pagrus caeruloestictus,pc,39.9,4693.6,0.18,0.35,-0.87,9.5,17.3,1.62
+Pagrus caeruloestictus,pc,39.9,4693.6,0.18,0.35,-0.87,9.5,17.3,2.41
+Pagrus caeruloestictus,pc,39.9,4693.6,0.18,0.35,-0.87,9.5,17.3,1.8
+Pagrus caeruloestictus,pc,39.9,4693.6,0.18,0.35,-0.87,9.5,17.3,0.09
+Pagrus caeruloestictus,pc,39.9,4693.6,0.18,0.35,-0.87,9.5,17.3,0.35
+Pagrus caeruloestictus,pc,39.9,4693.6,0.18,0.35,-0.87,9.5,17.3,0.24
+Pagrus caeruloestictus,pc,39.9,4693.6,0.18,0.35,-0.87,9.5,17.3,0.43
+Dentex angolensis,da,31.5,798.1,0.75,1.05,-0.2,7,17.9,1.62
+Dentex angolensis,da,31.5,798.1,0.75,1.05,-0.2,7,17.9,2.41
+Dentex angolensis,da,31.5,798.1,0.75,1.05,-0.2,7,17.9,1.8
+Dentex angolensis,da,31.5,798.1,0.75,1.05,-0.2,7,17.9,0.09
+Dentex angolensis,da,31.5,798.1,0.75,1.05,-0.2,7,17.9,0.35
+Dentex angolensis,da,31.5,798.1,0.75,1.05,-0.2,7,17.9,0.24
+Dentex angolensis,da,31.5,798.1,0.75,1.05,-0.2,7,17.9,0.43
+Galeocerdo cuvier,gc,558,804600,0.16,0.58,-2.3,32,5,1.62
+Galeocerdo cuvier,gc,558,804600,0.16,0.58,-2.3,32,5,2.41
+Galeocerdo cuvier,gc,558,804600,0.16,0.58,-2.3,32,5,1.8
+Galeocerdo cuvier,gc,558,804600,0.16,0.58,-2.3,32,5,0.09
+Galeocerdo cuvier,gc,558,804600,0.16,0.58,-2.3,32,5,0.35
+Galeocerdo cuvier,gc,558,804600,0.16,0.58,-2.3,32,5,0.24
+Galeocerdo cuvier,gc,558,804600,0.16,0.58,-2.3,32,5,0.43
