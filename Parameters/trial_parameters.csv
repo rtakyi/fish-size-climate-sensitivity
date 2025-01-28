@@ -1,0 +1,15 @@
+species,id,Linf (cm),Winf (g),growth_coef (yr-1),M (yr-1), t0 (yr),max_age (yr),L50 (cm),Fmort (yr-1)
+S. maderensis,sm,39.12,630,0.7,0.9,-0.32,6.06,19.25,0.09
+S. maderensis,sm,39.12,630,0.7,0.9,-0.32,6.06,19.25,0.24
+S. maderensis,sm,39.12,630,0.7,0.9,-0.32,6.06,19.25,0.35
+S. maderensis,sm,39.12,630,0.7,0.9,-0.32,6.06,19.25,0.43
+S. maderensis,sm,39.12,630,0.7,0.9,-0.32,6.06,19.25,1.62
+S. maderensis,sm,39.12,630,0.7,0.9,-0.32,6.06,19.25,1.8
+S. maderensis,sm,39.12,630,0.7,0.9,-0.32,6.06,19.25,2.41
+Engraulis encrasicolus,ee,14.46,18.5,0.52,1.08,-0.68,4.98,3.71,0.09
+Engraulis encrasicolus,ee,14.46,18.5,0.52,1.08,-0.68,4.98,3.71,0.24
+Engraulis encrasicolus,ee,14.46,18.5,0.52,1.08,-0.68,4.98,3.71,0.35
+Engraulis encrasicolus,ee,14.46,18.5,0.52,1.08,-0.68,4.98,3.71,0.43
+Engraulis encrasicolus,ee,14.46,18.5,0.52,1.08,-0.68,4.98,3.71,1.62
+Engraulis encrasicolus,ee,14.46,18.5,0.52,1.08,-0.68,4.98,3.71,1.8
+Engraulis encrasicolus,ee,14.46,18.5,0.52,1.08,-0.68,4.98,3.71,2.41

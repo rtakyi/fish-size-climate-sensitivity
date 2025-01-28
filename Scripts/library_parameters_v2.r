@@ -16,7 +16,7 @@ theme_update(axis.text.x = element_text(colour = "black", size = 12),
 source("Scripts/fish_size_functions v2.R")
 
 # Parameters
-case_study_parameters <- read.csv("Parameters/case_study_species_parameters2.csv")
+case_study_parameters <- read.csv("Parameters/case_study_species_parameters4.csv")
 
 
 target_species <- case_study_parameters

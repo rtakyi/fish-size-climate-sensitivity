@@ -1,4 +1,4 @@
-species,id,Linf (cm),Winf (g),growth_coef (yr-1),M (yr-1), t0 (yr),max_age (yr),L50 (cm),Fmort (yr-1)
+Species,id,Linf (cm),Winf (g),growth_coef (yr-1),M (yr-1),t0 (yr),max_age (yr),L50 (cm),Fmort (yr-1)
 S. maderensis,sm,39.12,630,0.7,0.9,-0.32,6.06,19.25,1.62
 S. maderensis,sm,39.12,630,0.7,0.9,-0.32,6.06,19.25,2.41
 S. maderensis,sm,39.12,630,0.7,0.9,-0.32,6.06,19.25,1.8
@@ -6,13 +6,13 @@ S. maderensis,sm,39.12,630,0.7,0.9,-0.32,6.06,19.25,0.09
 S. maderensis,sm,39.12,630,0.7,0.9,-0.32,6.06,19.25,0.35
 S. maderensis,sm,39.12,630,0.7,0.9,-0.32,6.06,19.25,0.24
 S. maderensis,sm,39.12,630,0.7,0.9,-0.32,6.06,19.25,0.43
-Engraulis encrasicolus,ee,14.46,18.5,0.52,1.08,-0.68,4.98,3.71,1.62
-Engraulis encrasicolus,ee,14.46,18.5,0.52,1.08,-0.68,4.98,3.71,2.41
-Engraulis encrasicolus,ee,14.46,18.5,0.52,1.08,-0.68,4.98,3.71,1.8
-Engraulis encrasicolus,ee,14.46,18.5,0.52,1.08,-0.68,4.98,3.71,0.09
-Engraulis encrasicolus,ee,14.46,18.5,0.52,1.08,-0.68,4.98,3.71,0.35
-Engraulis encrasicolus,ee,14.46,18.5,0.52,1.08,-0.68,4.98,3.71,0.24
-Engraulis encrasicolus,ee,14.46,18.5,0.52,1.08,-0.68,4.98,3.71,0.43
+Engraulis encrasicolus,ee,14.46,18.5,0.52, 1.08,-0.68,4.98,3.71,1.62
+Engraulis encrasicolus,ee,14.46,18.5,0.52, 1.09,-0.68,4.98,3.71,2.41
+Engraulis encrasicolus,ee,14.46,18.5,0.52, 1.10,-0.68,4.98,3.71,1.8
+Engraulis encrasicolus,ee,14.46,18.5,0.52, 1.11,-0.68,4.98,3.71,0.09
+Engraulis encrasicolus,ee,14.46,18.5,0.52, 1.12,-0.68,4.98,3.71,0.35
+Engraulis encrasicolus,ee,14.46,18.5,0.52, 1.13,-0.68,4.98,3.71,0.24
+Engraulis encrasicolus,ee,14.46,18.5,0.52, 1.14,-0.68,4.98,3.71,0.43
 Caranx crysos,cc,37.6,5100,0.41,0.65,-0.38,11,14.9,1.62
 Caranx crysos,cc,37.6,5100,0.41,0.65,-0.38,11,14.9,2.41
 Caranx crysos,cc,37.6,5100,0.41,0.65,-0.38,11,14.9,1.8
@@ -27,13 +27,13 @@ Scomber colias,sc,42.5,695,0.28,0.7,-0.54,10,24.1,0.09
 Scomber colias,sc,42.5,695,0.28,0.7,-0.54,10,24.1,0.35
 Scomber colias,sc,42.5,695,0.28,0.7,-0.54,10,24.1,0.24
 Scomber colias,sc,42.5,695,0.28,0.7,-0.54,10,24.1,0.43
-Pseudotolithus senegalensis,ps,110.3,,0.2,0.42,-0.59,15,22.8,1.62
-Pseudotolithus senegalensis,ps,111.3,,0.2,0.42,-0.59,15,22.8,2.41
-Pseudotolithus senegalensis,ps,112.3,,0.2,0.42,-0.59,15,22.8,1.8
-Pseudotolithus senegalensis,ps,113.3,,0.2,0.42,-0.59,15,22.8,0.09
-Pseudotolithus senegalensis,ps,114.3,,0.2,0.42,-0.59,15,22.8,0.35
-Pseudotolithus senegalensis,ps,115.3,,0.2,0.42,-0.59,15,22.8,0.24
-Pseudotolithus senegalensis,ps,116.3,,0.2,0.42,-0.59,15,22.8,0.43
+Pseudotolithus senegalensis,ps,110.3,?,0.2,0.42,-0.59,15,22.8,1.62
+Pseudotolithus senegalensis,ps,111.3,?,0.2,0.42,-0.59,15,22.8,2.41
+Pseudotolithus senegalensis,ps,112.3,?,0.2,0.42,-0.59,15,22.8,1.8
+Pseudotolithus senegalensis,ps,113.3,?,0.2,0.42,-0.59,15,22.8,0.09
+Pseudotolithus senegalensis,ps,114.3,?,0.2,0.42,-0.59,15,22.8,0.35
+Pseudotolithus senegalensis,ps,115.3,?,0.2,0.42,-0.59,15,22.8,0.24
+Pseudotolithus senegalensis,ps,116.3,?,0.2,0.42,-0.59,15,22.8,0.43
 Sphyraena sphyraena,ss,69.9,3600,1.64,1.88,-0.48,12,39.3,1.62
 Sphyraena sphyraena,ss,69.9,3600,1.64,1.88,-0.48,12,39.3,2.41
 Sphyraena sphyraena,ss,69.9,3600,1.64,1.88,-0.48,12,39.3,1.8

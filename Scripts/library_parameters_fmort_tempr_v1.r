@@ -16,7 +16,7 @@ theme_update(axis.text.x = element_text(colour = "black", size = 12),
 source("Scripts/fish_size_functions v2.R")
 
 # Parameters
-case_study_parameters <- read.csv("Parameters/case_study_species_parameters4.csv")
+case_study_parameters <- read.csv("Parameters/trial_parameters.csv")
 
 
 target_species <- case_study_parameters
@@ -40,6 +40,7 @@ k_opt <- 0.3 # optimal growth coefficient (source: fishbase.se/manual/key%20fact
 scnr_tempr <- length(tempr_dev)
 phi_1 <- 0.0438 # growth performance per degree change in temperature (source: Kielbassa et al. 2010; Mallet et al. 1999)
 
+
 # Calculate indicators for each species
 
 # Loop through each species
@@ -51,6 +52,7 @@ for (irow in 1:n){
   Fmort <- target_species$Fmort.[irow]
   scnr_clim <- expand.grid(tempr_dev = tempr_dev, Fmort = target_species$Fmort.[irow], target_species = target_species$species[irow])
   
+
   scnr_clim$size_indicator_Linf <- NA
   scnr_clim$size_indicator_Winf <- NA
   scnr_clim$size_indicator_K <- NA
@@ -104,19 +106,23 @@ for (irow in 1:n){
 
     # Plot results with all scenarios in one graph
     
-    g2 <- ggplot(scnr_clim, aes(x = tempr_dev)) +
-      geom_line(aes(y = size_indicator_Linf), color = "black") +
+    
+g4 <- ggplot(scnr_clim, aes(x = Fmort, y = size_indicator_Linf, group = tempr_dev)) +
+      geom_line(aes(color = tempr_dev), linetype = "solid") +
       #geom_line(aes(y = size_indicator_Winf), color = "blue") +
-      geom_vline(xintercept = tempr_opt_dev, linetype = 2) + 
-      geom_hline(yintercept = k_opt, linetype = 2) +
-      # geom_line(aes(y = size_indicator_K), color = "red") +
-      labs(title = target_species$species, x = "Temperature", y = "Size indicator")
+      #geom_vline(xintercept = tempr_opt, linetype = 2) + 
+      #geom_hline(yintercept = k_opt, linetype = 2) +
+      #geom_line(aes(y = size_indicator_K), color = "red") +
+      labs(title = target_species$species, x = "Fishing Mortality", y = "Size indicator")
 
 
 
- gall <- c(gall, list(g2))#, target_species$species[irow]))
+  gall <- c(gall, list(g4))#, target_species$species[irow]))
   
 }
+
+# debugonce(ggplot(g4))
+# ls(scnr_clim)
 
 gall
 
@@ -126,19 +132,19 @@ wrap_plots(gall)
 
 all_scnr_data <- bind_rows(all_scnrs)
 
-g3 <- ggplot(all_scnr_data) + 
-      aes(x = tempr_dev, y = size_indicator_Linf, color = Fmort, group = Fmort) +
+g5 <- ggplot(all_scnr_data) + 
+      aes(x = Fmort, y = size_indicator_Linf, color = tempr_dev, group = tempr_dev) +
       geom_line() +
       facet_wrap(~target_species) + 
-      geom_vline(xintercept = tempr_opt_dev, linetype = 2) +
+      #geom_vline(xintercept = tempr_opt_dev, linetype = 2) +
       geom_vline(xintercept = IPCC_scnrs, linetype = 2, col = "grey") +
-      geom_hline(yintercept = k_opt, linetype = 2) +
+      #geom_hline(yintercept = k_opt, linetype = 2) +
       annotate("text", x = tempr_opt_dev, y = max(all_scnr_data$size_indicator_Linf), 
                label = "tempr_opt_dev", angle = 90, vjust = -0.5, hjust = 1, color = "black") +
-      annotate("text", x = min(all_scnr_data$tempr_diff), y = k_opt, 
+      annotate("text", x = min(all_scnr_data$Fmort), y = k_opt, 
                label = "k_opt", hjust = -0.2, vjust = 1.5, color = "black") +
       labs(title = "Sensitivity of size indicators to changes in Linf due to climate change", 
-          x = "Temperature", y = "Size indicator") + scale_colour_continuous(trans = "reverse")
+          x = "Fishing Mortality", y = "Size indicator") + scale_colour_continuous(trans = "reverse")
       
       #labs(title = paste("Sensitivity of size indicators to changes in Linf due to climate change", 
                 #target_species$species[1], "ID:", id), x = "Temperature", y = "Size indicator") + 
@@ -147,7 +153,7 @@ g3 <- ggplot(all_scnr_data) +
  
 
 # Save plot
-ggsave(g3, filename = paste0("Shared/Outputs/size_indicator_sensitivity", target_species$species, ".tiff"), width = 6, height = 9, units = "in", dpi = 300)
+ggsave(g5, filename = paste0("Shared/Outputs/size_indicator_sensitivity", target_species$species, ".tiff"), width = 6, height = 9, units = "in", dpi = 300)
 
 
 
