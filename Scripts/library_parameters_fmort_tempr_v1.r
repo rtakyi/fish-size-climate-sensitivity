@@ -113,7 +113,7 @@ g4 <- ggplot(scnr_clim, aes(x = Fmort, y = size_indicator_Linf, group = tempr_de
       #geom_vline(xintercept = tempr_opt, linetype = 2) + 
       #geom_hline(yintercept = k_opt, linetype = 2) +
       #geom_line(aes(y = size_indicator_K), color = "red") +
-      labs(title = target_species$species, x = "Fishing Mortality", y = "Size indicator")
+      labs(title = target_species$species[i], x = "Fishing Mortality", y = "Size indicator")
 
 
 
@@ -144,17 +144,45 @@ g5 <- ggplot(all_scnr_data) +
       annotate("text", x = min(all_scnr_data$Fmort), y = k_opt, 
                label = "k_opt", hjust = -0.2, vjust = 1.5, color = "black") +
       labs(title = "Sensitivity of size indicators to changes in Linf due to climate change", 
-          x = "Fishing Mortality", y = "Size indicator") + scale_colour_continuous(trans = "reverse")
+          x = "Fishing Mortality", y = "Size indicator") +
+  #
+  scale_color_distiller(palette = "RdBu")
+  # scale_colour_continuous(trans = "reverse")
       
       #labs(title = paste("Sensitivity of size indicators to changes in Linf due to climate change", 
                 #target_species$species[1], "ID:", id), x = "Temperature", y = "Size indicator") + 
                 #scale_colour_continuous(trans = "reverse")
 
- 
+ g5
 
 # Save plot
 ggsave(g5, filename = paste0("Shared/Outputs/size_indicator_sensitivity", target_species$species, ".tiff"), width = 6, height = 9, units = "in", dpi = 300)
 
+
+g6 <- ggplot(all_scnr_data) + 
+  aes(x = tempr_dev, y = size_indicator_Linf, color = Fmort, group = Fmort) +
+  geom_line() +
+  facet_wrap(~target_species) + 
+  #geom_vline(xintercept = tempr_opt_dev, linetype = 2) +
+  geom_vline(xintercept = IPCC_scnrs, linetype = 2, col = "grey") +
+  #geom_hline(yintercept = k_opt, linetype = 2) +
+  annotate("text", x = tempr_opt_dev, y = max(all_scnr_data$size_indicator_Linf), 
+           label = "tempr_opt_dev", angle = 90, vjust = -0.5, hjust = 1, color = "black") +
+  annotate("text", x = min(all_scnr_data$Fmort), y = k_opt, 
+           label = "k_opt", hjust = -0.2, vjust = 1.5, color = "black") +
+  labs(title = "Sensitivity of size indicators to changes in Linf due to climate change", 
+       x = "Temperature relative to optimum", y = "Size indicator") +
+  #
+  scale_color_distiller(palette = "Reds")
+g6
+
+# scale_colour_continuous(trans = "reverse")
+
+#labs(title = paste("Sensitivity of size indicators to changes in Linf due to climate change", 
+#target_species$species[1], "ID:", id), x = "Temperature", y = "Size indicator") + 
+#scale_colour_continuous(trans = "reverse")
+
+g5
 
 
 #ggsave(g3, filename = paste0("Shared/Outputs/size_indicator_sensitivity_", target_species$species,
