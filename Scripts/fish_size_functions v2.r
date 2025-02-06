@@ -100,3 +100,4 @@ Winf_tempr <- function(Winf, Linf, Linf_tempr){
     Winf_tempr_1 <- Winf * (Linf_tempr / Linf)^b 
     return(Winf_tempr_1)
 }
+
