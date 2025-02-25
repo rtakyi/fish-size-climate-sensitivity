@@ -16,7 +16,7 @@ theme_update(axis.text.x = element_text(colour = "black", size = 12),
 source("Scripts/fish_size_functions v2.R")
 
 # Parameters
-case_study_parameters <- read.csv("Parameters/cs_sp_parameters_slow.csv")
+case_study_parameters <- read.csv("Parameters/trial_slw.csv")
 
 
 target_species <- case_study_parameters
@@ -87,15 +87,19 @@ for (irow in 1:n){
 
     #update this with linf model... 
     Linf_new_clim <- Linf_tempr(k, Linf, k_new_clim, phi_1)
+    dyna_Linf_new_clim <- Linf_new_clim + Linf_new_clim*tempr_dev[i]*phi_1
+    # dyna_Linf_new_clim <- Linf_new_clim  + (- 0.1 * tempr_dev[i] * phi_1)
     Winf_new_clim <- a*Linf_new_clim^b
     
 
     ## Calculate YPR model with new Linf growth parameters
-    dat_clim <- abundance_catch_at_age(max_age, N0, Linf_new_clim, Winf_new_clim, k_new_clim, t0, a, b, M, L50, k_length, Fmort)
+    # dat_clim <- abundance_catch_at_age(max_age, N0, Linf_new_clim, Winf_new_clim, k_new_clim, t0, a, b, M, L50, k_length, Fmort)
+    dat_clim <- abundance_catch_at_age(max_age, N0, dyna_Linf_new_clim, Winf_new_clim, k_new_clim, t0, a, b, M, L50, k_length, Fmort)
     ind_tempr <- stock_indicators(dat_clim, Linf, Winf)
+    # dyna_Linf_new_clim <- Linf_new_clim + Linf_new_clim*tempr_dev[i]*phi_1
     scnr_clim$size_indicator_Linf[i] <- ind_tempr$mlength_indicator
     scnr_clim$Fmort <- Fmort
-    #scnr_clim$size_indicator_Winf[i] <- ind_tempr$mweight_indicator
+    # scnr_clim$size_indicator_Winf[i] <- ind_tempr$mweight_indicator
     
    }
  
@@ -188,4 +192,5 @@ ggsave(g5, filename = paste0("Shared/Outputs/size_indicator_sensitivity", target
 
 #ggsave(g3, filename = paste0("Shared/Outputs/size_indicator_sensitivity_", target_species$species,
          #"_", target_species$id, ".tiff"), width = 6, height = 9, units = "in", dpi = 300)
+
 
