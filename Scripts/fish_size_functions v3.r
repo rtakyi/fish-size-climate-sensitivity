@@ -61,7 +61,7 @@ abundance_catch_at_age <- function(max_age, N0, Linf, Winf, k, t0, a, b, M, L50,
 
 
 #function to calculate indicators from output of abundance_catch_at_age
-stock_indicators <- function(dat, Linf, Winf){
+stock_indicators <- function(dat, Linf, Linf_updated, Winf){
 indicators <- with(dat, {
   data.frame(mweight = sum((abundance * weight) / sum(abundance)),
                            mlength = sum((abundance * length) / sum(abundance)),
@@ -72,6 +72,7 @@ indicators <- with(dat, {
                            )
     })
     indicators$mlength_indicator <- indicators$mlength/Linf
+    indicators$mlength_indicator_dynamic <- indicators$mlength/Linf_updated 
     indicators$mweight_indicator <- indicators$mweight/Winf
     indicators$length_weight_ratio <- indicators$mlength_indicator/indicators$mweight_indicator
     indicators$biomass_per_recruit <- indicators$total_biomass/indicators$total_abundance

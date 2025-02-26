@@ -1,4 +1,3 @@
-
 rm(list = ls())
 
 # Load libraries
@@ -57,7 +56,10 @@ for (irow in 1:n){
   scnr_clim$size_indicator_Linf_dynamic <- NA
   scnr_clim$size_indicator_Winf <- NA
   scnr_clim$size_indicator_K <- NA
- 
+  scnr_clim$Linf <- NA
+  scnr_clim$Linf_new_clim <- NA
+  scnr_clim$k_new_clim <- NA  # Add this line
+
   
   scnr_clim$size_indicator_Linf <- numeric(scnr_tempr)
   scnr_clim$size_indicator_Winf <- numeric(scnr_tempr)
@@ -86,10 +88,16 @@ for (irow in 1:n){
     #make sure K doesn't go less than zero
     k_new_clim <- max(c(0, k_new_clim))
 
+    # Store k value
+    scnr_clim$k_new_clim[i] <- k_new_clim
+
     #update this with linf model... 
     Linf_new_clim <- Linf_tempr(k, Linf, k_new_clim, phi_1)
     Winf_new_clim <- a*Linf_new_clim^b
     
+    # Store Linf values
+    scnr_clim$Linf[i] <- Linf
+    scnr_clim$Linf_new_clim[i] <- Linf_new_clim
 
     ## Calculate YPR model with new Linf growth parameters
     dat_clim <- abundance_catch_at_age(max_age, N0, Linf_new_clim, Winf_new_clim, k_new_clim, t0, a, b, M, L50, k_length, Fmort)
@@ -127,9 +135,9 @@ g4 <- ggplot(scnr_clim, aes(x = tempr_dev, y = size_indicator_Linf, group = Fmor
 # debugonce(ggplot(g4))
 # ls(scnr_clim)
 
-gall
+# gall
 
-wrap_plots(gall)
+# wrap_plots(gall)
 
 
 
@@ -191,6 +199,46 @@ g6 <-
   scale_color_distiller(palette = "RdBu")
 
 g6
+
+# Plot comparing original and new Linf values
+g7 <- 
+  all_scnr_data %>%
+  filter(Fmort %in% c(0.09, 0.35, 0.43)) %>%
+  ggplot() + 
+  aes(x = tempr_dev) +
+  geom_line(aes(y = Linf, color = "Original Linf")) +
+  geom_line(aes(y = Linf_new_clim, color = "Modified Linf")) +
+  facet_grid(Fmort~target_species) + 
+  geom_vline(xintercept = tempr_opt_dev, linetype = 2) +
+  geom_vline(xintercept = IPCC_scnrs, linetype = 2, col = "grey") +
+  ylim(0, 300) + 
+  scale_color_manual(name = "Linf Type",
+                    values = c("Original Linf" = "black", "Modified Linf" = "red")) +
+  labs(title = "Comparison of Original and Temperature-Modified Linf", 
+       x = "Deviation in temperature", 
+       y = "Length (cm)")
+
+g7
+
+# Plot comparing k_new_clim with k_opt
+g8 <- 
+  all_scnr_data %>%
+  filter(Fmort %in% c(0.09, 0.35, 0.43)) %>%
+  ggplot() + 
+  aes(x = tempr_dev) +
+  geom_line(aes(y = k_new_clim, color = "Modified k")) +
+  geom_hline(yintercept = k_opt, linetype = 2, color = "blue") +
+  facet_grid(Fmort~target_species) + 
+  geom_vline(xintercept = tempr_opt_dev, linetype = 2) +
+  geom_vline(xintercept = IPCC_scnrs, linetype = 2, col = "grey") +
+  scale_color_manual(name = "Growth Parameter",
+                    values = c("Modified k" = "red")) +
+  labs(title = "Comparison of Temperature-Modified k with k_opt", 
+       x = "Deviation in temperature", 
+       y = "Growth coefficient (k)") +
+  ylim(0, max(c(k_opt * 1.5, max(all_scnr_data$k_new_clim, na.rm = TRUE))))
+
+g8
 
 # g6 <- ggplot(all_scnr_data) + 
 #   aes(x = tempr_dev, y = size_indicator_Linf, color = Fmort, group = Fmort) +
