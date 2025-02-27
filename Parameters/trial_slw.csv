@@ -1,8 +1,0 @@
-species,id,Linf (cm),Winf (g),growth_coef (yr-1),M (yr-1), t0 (yr),max_age (yr),L50 (cm),Fmort (yr-1)
-Lutjanus fulgens,lf,51.09,,0.47,0.78,-0.3,6.41,31.5,1.62
-Lutjanus fulgens,lf,51.09,,0.47,0.78,-0.3,6.41,31.5,2.41
-Lutjanus fulgens,lf,51.09,,0.47,0.78,-0.3,6.41,31.5,1.8
-Lutjanus fulgens,lf,51.09,,0.47,0.78,-0.3,6.41,31.5,0.09
-Lutjanus fulgens,lf,51.09,,0.47,0.78,-0.3,6.41,31.5,0.35
-Lutjanus fulgens,lf,51.09,,0.47,0.78,-0.3,6.41,31.5,0.24
-Lutjanus fulgens,lf,51.09,,0.47,0.78,-0.3,6.41,31.5,0.43

@@ -15,7 +15,7 @@ theme_update(axis.text.x = element_text(colour = "black", size = 12),
 source("Scripts/fish_size_functions v3.R")
 
 # Parameters
-case_study_parameters <- read.csv("Parameters/cs_sp_parameters_slow.csv")
+case_study_parameters <- read.csv("Parameters/cs_sp_parameters_fast.csv")
 
 
 target_species <- case_study_parameters
@@ -25,10 +25,11 @@ target_species <- case_study_parameters
 n <- nrow(target_species)
 
 # Parameters for scenarios of changes in temperature, optimum temperature and growth performance due to climate change
-tempr <- seq(10, 38, by = 0.1) # temperature range (Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea; Idike and Lupo (2024). Analysis of sea surface temperature patterns, vari...(29.34))
+tempr <- seq(7.1, 34, by = 0.1) # temperature range (Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea; Idike and Lupo (2024). Analysis of sea surface temperature patterns, vari...(29.34))
 tempr_min_dev <- -17.3 # minimum temperature deviation from optimal temperature    
 tempr_max_dev <- 10.7 # maximum temperature deviation from optimal temperature   
-tempr_opt <- 27.13 #  source: Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea;
+# tempr_opt <- 27.13 #  source: Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea;
+tempr_opt <- target_species$tempr_opt
 IPCC_scnrs <- (tempr_opt - tempr_opt) + c(1.5, 2, 4) # optimal temperature based on ipcc (CMIP6) projections (source: Sohou et al. 2020; https://www.ipcc.ch/report/ar6/wg1/downloads/factsheets/IPCC_AR6_WGI_Regional_Fact_Sheet_Australasia.pdf)
 
 # Temperature difference between optimal and temperature sequence
