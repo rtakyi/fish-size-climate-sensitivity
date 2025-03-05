@@ -90,8 +90,9 @@ k_tempr <- function(tempr, tempr_max, tempr_min, tempr_opt, k_opt){
 
 
 ##  simulate temperature effect on growth performance and asymptotic length: source: Kielbassa et al. 2010; Mallet et al. 1999
-Linf_tempr <- function(k, Linf, k_tempr, phi_1){
-    growth_per_tempr <- (log10(k) + (2 * log10(Linf))) + phi_1
+Linf_tempr <- function(k, Linf, k_tempr, tempr, tempr_opt, dec_gr, sln_opt){
+  phi_t <- (dec_gr * 2) *(tempr - tempr_opt) + sln_opt
+    growth_per_tempr <- (log10(k) + (2 * log10(Linf))) + phi_t
     asymp_L_tempr <- sqrt((10^(growth_per_tempr)) / (k_tempr))
     return(asymp_L_tempr)
 }

@@ -15,7 +15,7 @@ theme_update(axis.text.x = element_text(colour = "black", size = 12),
 source("Scripts/fish_size_functions v3.R")
 
 # Parameters
-case_study_parameters <- read.csv("Parameters/cs_sp_parameters_fast.csv")
+case_study_parameters <- read.csv("Parameters/trial_parameters.csv")
 
 
 target_species <- case_study_parameters
@@ -38,7 +38,7 @@ tempr_opt_dev <- tempr_opt - tempr_opt
  
 k_opt <- 0.3 # optimal growth coefficient (source: fishbase.se/manual/key%20facts.htm)
 scnr_tempr <- length(tempr_dev)
-phi_1 <- 0.0438 # growth performance per degree change in temperature (source: Kielbassa et al. 2010; Mallet et al. 1999)
+# phi_t <- 0.0438 # growth performance per degree change in temperature (source: Kielbassa et al. 2010; Mallet et al. 1999)
 
 
 # Calculate indicators for each species
@@ -50,8 +50,13 @@ for (irow in 1:n){
   ## Add climate change impacts on Linf, Winf and K
   #one way to get all fmors and all temprs
   Fmort <- target_species$Fmort.[irow]
+
+# Parameters for fish growth performance index per degree change in temp with Arhenius quadratic model dervative
+  dec_gr <- target_species$dec_gr[irow] # decline in growth at the extreme temperatures (made up)
+  sln_opt <- target_species$sln_opt[irow] # slope of the growth performance curve at the optimal temperature (made up)
+
   scnr_clim <- expand.grid(tempr_dev = tempr_dev, Fmort = target_species$Fmort.[irow], target_species = target_species$species[irow])
-  
+    
 
   scnr_clim$size_indicator_Linf <- NA
   scnr_clim$size_indicator_Linf_dynamic <- NA
@@ -81,6 +86,7 @@ for (irow in 1:n){
   k_length <- 0.2 # slope of the logistic curve
   N0 <- 42000 # initial abundance of fish in tonnes
 
+      
   # Loop through each temperature scenario
   for (i in 1:scnr_tempr){
     
@@ -93,7 +99,8 @@ for (irow in 1:n){
     scnr_clim$k_new_clim[i] <- k_new_clim
 
     #update this with linf model... 
-    Linf_new_clim <- Linf_tempr(k, Linf, k_new_clim, phi_1)
+    # Linf_new_clim <- Linf_tempr(k, Linf, k_new_clim, phi_t)
+    Linf_new_clim <- Linf_tempr(k, Linf, k_new_clim, tempr[i], tempr_opt, dec_gr, sln_opt)
     Winf_new_clim <- a*Linf_new_clim^b
     
     # Store Linf values
@@ -133,7 +140,7 @@ g4 <- ggplot(scnr_clim, aes(x = tempr_dev, y = size_indicator_Linf, group = Fmor
   
 }
 
-# debugonce(ggplot(g4))
+# debugonce()
 # ls(scnr_clim)
 
 # gall
