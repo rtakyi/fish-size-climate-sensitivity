@@ -52,8 +52,8 @@ for (irow in 1:n){
   Fmort <- target_species$Fmort.[irow]
 
 # Parameters for fish growth performance index per degree change in temp with Arhenius quadratic model dervative
-  dec_gr <- target_species$dec_gr[irow] # decline in growth at the extreme temperatures (made up)
-  sln_opt <- target_species$sln_opt[irow] # slope of the growth performance curve at the optimal temperature (made up)
+  dec_gr <- target_species$dec_gr.[irow] # decline in growth at the extreme temperatures (made up)
+  sln_opt <- target_species$sln_opt.[irow] # slope of the growth performance curve at the optimal temperature (made up)
 
   scnr_clim <- expand.grid(tempr_dev = tempr_dev, Fmort = target_species$Fmort.[irow], target_species = target_species$species[irow])
     
@@ -140,8 +140,8 @@ g4 <- ggplot(scnr_clim, aes(x = tempr_dev, y = size_indicator_Linf, group = Fmor
   
 }
 
-# debugonce()
-# ls(scnr_clim)
+debugonce(scnr_clim)
+ls(scnr_clim)
 
 # gall
 
