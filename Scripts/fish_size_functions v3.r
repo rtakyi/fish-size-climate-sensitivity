@@ -81,25 +81,26 @@ indicators <- with(dat, {
 
 
 ## simulate temperature effect on growth coeffecients: source: Kielbassa et al. 2010; Mallet et al. 1999 
-k_tempr <- function(tempr, tempr_max, tempr_min, tempr_opt, k_opt){
-    growth_coef_tempr <- k_opt * ((tempr - tempr_min) * (tempr - tempr_max) /
-                                    ((tempr - tempr_min) * (tempr - tempr_max) - (tempr - tempr_opt)^2)
+k_temp_function <- function(temp, max_temp, min_temp, optimal_temp, k_opt){
+    growth_coef_temp <- k_opt * ((temp - min_temp) * (temp - max_temp) /
+                                    ((temp - min_temp) * (temp - max_temp) - (temp - optimal_temp)^2)
                                   )
-    return(growth_coef_tempr)
+    return(growth_coef_temp)
 }
 
 
 ##  simulate temperature effect on growth performance and asymptotic length: source: Kielbassa et al. 2010; Mallet et al. 1999
-Linf_tempr <- function(k, Linf, k_tempr, tempr, tempr_opt, dec_gr, sln_opt){
-  phi_t <- (dec_gr * 2) *(tempr - tempr_opt) + sln_opt
-    growth_per_tempr <- (log10(k) + (2 * log10(Linf))) + phi_t
-    asymp_L_tempr <- sqrt((10^(growth_per_tempr)) / (k_tempr))
-    return(asymp_L_tempr)
+Linf_temp_function <- function(k_baseline, Linf, k_under_new_temp, temp_deviation, linf_temp_sensitivity){
+    phi_0 <- log10(k_baseline *Linf^2)
+    phi_t <- phi_0 + linf_temp_sensitivity*temp_deviation
+    asymp_L_temp <- sqrt((10^(phi_t)) / (k_under_new_temp))
+    return(asymp_L_temp)
+    
 }
 
 ## simulate temperature effect on growth performance and asymptotic weight: source: Kielbassa et al. 2010; Mallet et al. 1999
-Winf_tempr <- function(Winf, Linf, Linf_tempr){
-    Winf_tempr_1 <- Winf * (Linf_tempr / Linf)^b 
-    return(Winf_tempr_1)
+Winf_temp_function <- function(Winf, Linf, Linf_temp){
+    asymp_W_temp <- Winf * (Linf_temp / Linf)^b 
+    return(asymp_W_temp)
 }
 

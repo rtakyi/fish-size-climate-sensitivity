@@ -1,0 +1,15 @@
+species,id,Linf (cm),Winf (g),growth_coef (yr-1),M (yr-1), t0 (yr),max_age (yr),L50 (cm),Fmort (yr-1),tempr_opt
+Sardinella maderensis,sm,39.12,630,0.7,0.9,-0.32,6.06,19.25,0.09,21
+Sardinella maderensis,sm,39.12,630,0.7,0.9,-0.32,6.06,19.25,0.24,21
+Sardinella maderensis,sm,39.12,630,0.7,0.9,-0.32,6.06,19.25,0.35,21
+Sardinella maderensis,sm,39.12,630,0.7,0.9,-0.32,6.06,19.25,0.43,21
+Sardinella maderensis,sm,39.12,630,0.7,0.9,-0.32,6.06,19.25,1.62,21
+Sardinella maderensis,sm,39.12,630,0.7,0.9,-0.32,6.06,19.25,1.8,21
+Sardinella maderensis,sm,39.12,630,0.7,0.9,-0.32,6.06,19.25,2.41,21
+Lutjanus fulgens,lf,51.09,1282,0.47,0.78,-0.3,6.41,31.5,1.62,16.3
+Lutjanus fulgens,lf,51.09,1282,0.47,0.78,-0.3,6.41,31.5,2.41,16.3
+Lutjanus fulgens,lf,51.09,1282,0.47,0.78,-0.3,6.41,31.5,1.8,16.3
+Lutjanus fulgens,lf,51.09,1282,0.47,0.78,-0.3,6.41,31.5,0.09,16.3
+Lutjanus fulgens,lf,51.09,1282,0.47,0.78,-0.3,6.41,31.5,0.35,16.3
+Lutjanus fulgens,lf,51.09,1282,0.47,0.78,-0.3,6.41,31.5,0.24,16.3
+Lutjanus fulgens,lf,51.09,1282,0.47,0.78,-0.3,6.41,31.5,0.43,16.3

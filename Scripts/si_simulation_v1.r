@@ -25,19 +25,19 @@ target_species <- case_study_parameters
 n <- nrow(target_species)
 
 # Parameters for scenarios of changes in temperature, optimum temperature and growth performance due to climate change
-tempr <- seq(7.1, 34, by = 0.1) # temperature range (Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea; Idike and Lupo (2024). Analysis of sea surface temperature patterns, vari...(29.34))
-tempr_min_dev <- -17.3 # minimum temperature deviation from optimal temperature    
-tempr_max_dev <- 10.7 # maximum temperature deviation from optimal temperature   
+temp <- seq(7.1, 34, by = 0.1) # temperature range (Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea; Idike and Lupo (2024). Analysis of sea surface temperature patterns, vari...(29.34))
+min_temp_dev <- -17.3 # minimum temperature deviation from optimal temperature    
+max_temp_dev <- 10.7 # maximum temperature deviation from optimal temperature   
 # tempr_opt <- 27.13 #  source: Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea;
-tempr_opt <- target_species$tempr_opt
-IPCC_scnrs <- (tempr_opt - tempr_opt) + c(1.5, 2, 4) # optimal temperature based on ipcc (CMIP6) projections (source: Sohou et al. 2020; https://www.ipcc.ch/report/ar6/wg1/downloads/factsheets/IPCC_AR6_WGI_Regional_Fact_Sheet_Australasia.pdf)
+optimal_temp <- target_species$tempr_opt
+IPCC_scnrs <- (optimal_temp - optimal_temp) + c(1.5, 2, 4) # optimal temperature based on ipcc (CMIP6) projections (source: Sohou et al. 2020; https://www.ipcc.ch/report/ar6/wg1/downloads/factsheets/IPCC_AR6_WGI_Regional_Fact_Sheet_Australasia.pdf)
 
 # Temperature difference between optimal and temperature sequence
-tempr_dev <- tempr - tempr_opt
-tempr_opt_dev <- tempr_opt - tempr_opt
+temp_dev <- temp - optimal_temp
+optimal_temp_dev <- tempr_opt - tempr_opt
  
-k_opt <- 0.3 # optimal growth coefficient (source: fishbase.se/manual/key%20facts.htm)
-scnr_tempr <- length(tempr_dev)
+k_optimal <- target_species$growth_coef..yr.1. # optimal growth coefficient (source: fishbase.se/manual/key%20facts.htm)
+scnr_temp <- length(temp_dev)
 # phi_t <- 0.0438 # growth performance per degree change in temperature (source: Kielbassa et al. 2010; Mallet et al. 1999)
 
 
@@ -52,10 +52,10 @@ for (irow in 1:n){
   Fmort <- target_species$Fmort.[irow]
 
 # Parameters for fish growth performance index per degree change in temp with Arhenius quadratic model dervative
-  dec_gr <- target_species$dec_gr.[irow] # decline in growth at the extreme temperatures (made up)
-  sln_opt <- target_species$sln_opt.[irow] # slope of the growth performance curve at the optimal temperature (made up)
+  decline_growth <- target_species$dec_gr.[irow] # decline in growth at the extreme temperatures (made up)
+  # sln_opt <- target_species$sln_opt.[irow] # slope of the growth performance curve at the optimal temperature (made up)
 
-  scnr_clim <- expand.grid(tempr_dev = tempr_dev, Fmort = target_species$Fmort.[irow], target_species = target_species$species[irow])
+  scnr_clim <- expand.grid(temp_dev = temp_dev, Fmort = target_species$Fmort.[irow], target_species = target_species$species[irow])
     
 
   scnr_clim$size_indicator_Linf <- NA
@@ -72,9 +72,9 @@ for (irow in 1:n){
   scnr_clim$size_indicator_K <- numeric(scnr_tempr)
 
   # Fish biology parameters
-  Linf <- target_species$Linf..cm.[irow] 
-  Winf <- target_species$Winf..g.[irow]
-  k <- target_species$growth_coef.[irow]
+  Linf_baseline <- target_species$Linf..cm.[irow] 
+  Winf_baseline <- target_species$Winf..g.[irow]
+  k_baseline <- target_species$growth_coef.[irow]
   M <- target_species$M.[irow]
   t0 <- target_species$t0.[irow]
   max_age <- target_species$max_age.[irow] 
@@ -91,7 +91,7 @@ for (irow in 1:n){
   for (i in 1:scnr_tempr){
     
     # Calculate new growth parameters
-    k_new_clim <- k_tempr(tempr_dev[i], tempr_max_dev, tempr_min_dev, tempr_opt_dev, k_opt)
+    k_new_clim <- k_temp_function(temp_dev[i], max_temp_dev, min_temp_dev, optimal_temp_dev, k_optimal)
     #make sure K doesn't go less than zero
     k_new_clim <- max(c(0, k_new_clim))
 
@@ -100,7 +100,7 @@ for (irow in 1:n){
 
     #update this with linf model... 
     # Linf_new_clim <- Linf_tempr(k, Linf, k_new_clim, phi_t)
-    Linf_new_clim <- Linf_tempr(k, Linf, k_new_clim, tempr[i], tempr_opt, dec_gr, sln_opt)
+    Linf_new_clim <- Linf_temp_function(k_baseline, Linf_baseline, k_new_clim, temp_dev[i], dec_gr)
     Winf_new_clim <- a*Linf_new_clim^b
     
     # Store Linf values
