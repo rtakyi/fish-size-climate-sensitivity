@@ -31,16 +31,13 @@ n <- nrow(target_species)
 temp <- seq(5, 32, by = 0.1)   # temperature range (Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea; Idike and Lupo (2024). Analysis of sea surface temperature patterns, vari...(29.34))
 min_temp_dev <- -17.3   # minimum temperature deviation from optimal temperature
 max_temp_dev <- 10.7  # maximum temperature deviation from optimal temperature
-# optimal_temp <- 27.13   #  source: Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea;
 sp_opt_temp_optk <- target_species$sp_opt_temp # species optimal temperature (source: fishbase.se/manual/key%20facts.htm)
 
 # IPCC scenarios with optimal temperature 
-# IPCC_scnrs <- (optimal_temp - optimal_temp) + c(1, 2, 4)  # optimal temperature based on ipcc (CMIP6) projections (source: Sohou et al. 2020; https://www.ipcc.ch/report/ar6/wg1/downloads/factsheets/IPCC_AR6_WGI_Regional_Fact_Sheet_Australasia.pdf)
 IPCC_scnrs <- (sp_opt_temp_optk - sp_opt_temp_optk) + c(1, 2, 4) # optimal temperature based on ipcc (CMIP6) projections (source: Sohou et al. 2020; https://www.ipcc.ch/report/ar6/wg1/downloads/factsheets/IPCC_AR6_WGI_Regional_Fact_Sheet_Australasia.pdf)
 
 # Temperature difference between optimal and temperature sequence
-# optimal_temp_dev <- optimal_temp - optimal_temp
- optimal_temp_dev <- sp_opt_temp_optk - sp_opt_temp_optk # optimal temperature (source: fishbase.se/manual/key%20facts.htm)
+#  optimal_temp_dev <- sp_opt_temp_optk - sp_opt_temp_optk # optimal temperature (source: fishbase.se/manual/key%20facts.htm)
 
 # Temperature scenario length
 scnr_temp <- length(temp)
@@ -53,7 +50,6 @@ for (irow in 1:n){
   ## Add climate change impacts on Linf, Winf and K
   #one way to get all fmors and all temprs
   Fmort <- target_species$Fmort.[irow]
-  # temp_dev <- temp - optimal_temp
   temp_dev <- temp - sp_opt_temp_optk # temperature deviation from optimal temperature
   
   scnr_clim <- expand.grid(temp_dev = temp_dev, Fmort = target_species$Fmort.[irow], target_species = target_species$species[irow])
@@ -142,7 +138,7 @@ g4 <- ggplot(scnr_clim, aes(x = temp_dev, y = size_indicator_Linf, group = Fmort
   gall <- c(gall, list(g4))
   
 }
-print(scnr_clim)
+# print(scnr_clim)
 # debugonce(ggplot(g4))
 # ls(scnr_clim)
 
@@ -163,7 +159,7 @@ g5 <- ggplot(all_scnr_data) +
       # geom_vline(xintercept = sp_opt_temp_optk, linetype = 2, col = "brown") +
       geom_hline(yintercept = k_opt, linetype = 2) +
       annotate("text", x = sp_opt_temp_optk_dev, y = max(all_scnr_data$size_indicator_Linf), 
-               label = "optimal_temp_dev", angle = 90, vjust = -0.5, hjust = 1, color = "black") +
+               label = "sp_opt_temp_optk_dev", angle = 90, vjust = -0.5, hjust = 1, color = "black") +
       # annotate("text", x = sp_opt_temp_optk, y = max(all_scnr_data$size_indicator_Linf),
       #          label = "sp_opt_temp_optk", angle = 90, vjust = -0.5, hjust = 1, color = "black") +
       annotate("text", x = min(all_scnr_data$Fmort), y = k_opt, 
