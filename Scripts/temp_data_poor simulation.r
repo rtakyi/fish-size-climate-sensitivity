@@ -156,19 +156,16 @@ g5 <- ggplot(all_scnr_data) +
       facet_wrap(~target_species) + 
       geom_vline(xintercept = sp_opt_temp_optk_dev, linetype = 2) +
       geom_vline(xintercept = IPCC_scnrs, linetype = 2, col = "grey") +
-      # geom_vline(xintercept = sp_opt_temp_optk, linetype = 2, col = "brown") +
       geom_hline(yintercept = k_opt, linetype = 2) +
       annotate("text", x = sp_opt_temp_optk_dev, y = max(all_scnr_data$size_indicator_Linf), 
-               label = "sp_opt_temp_optk_dev", angle = 90, vjust = -0.5, hjust = 1, color = "black") +
-      # annotate("text", x = sp_opt_temp_optk, y = max(all_scnr_data$size_indicator_Linf),
-      #          label = "sp_opt_temp_optk", angle = 90, vjust = -0.5, hjust = 1, color = "black") +
-      annotate("text", x = min(all_scnr_data$Fmort), y = k_opt, 
+              label = "sp_opt_temp_optk_dev", angle = 90, vjust = -0.5, hjust = 1, color = "black") +
+      annotate("text", x = min(all_scnr_data$Fmort), y = k_opt,
                label = "k_opt", hjust = -0.2, vjust = 1.5, color = "black") +
       labs(title = "Sensitivity of size indicators to changes in Linf due to climate change", 
           x = "Deviation in temperature", y = "Size indicator") +
   #
   scale_color_distiller(palette = "RdBu")
-      
+
  g5
 
 # Save plot
