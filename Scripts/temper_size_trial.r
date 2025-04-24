@@ -50,16 +50,22 @@ tempr_max_dev <- 10.7 # maximum temperature deviation from optimal temperature
 tempr_opt <- 27.13 #  source: Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea;
 
 
-IPCC_scnrs <- (tempr_opt - tempr_opt) + c(1.5, 2, 4) # optimal temperature based on ipcc (CMIP6) projections (source: Sohou et al. 2020; https://www.ipcc.ch/report/ar6/wg1/downloads/factsheets/IPCC_AR6_WGI_Regional_Fact_Sheet_Australasia.pdf)
+IPCC_scnrs <- (tempr_opt - tempr_opt) + c(1, 2, 4) # optimal temperature based on ipcc (CMIP6) projections (source: Sohou et al. 2020; https://www.ipcc.ch/report/ar6/wg1/downloads/factsheets/IPCC_AR6_WGI_Regional_Fact_Sheet_Australasia.pdf)
+
 
 # Temperature difference between optimal and temperature sequence
-tempr_dev <- tempr - tempr_opt
-tempr_opt_dev <- tempr_opt - tempr_opt
- 
-# k <- target_species$growth_coef..yr.1. # growth coefficient
-k <- 0.3 # growth coefficient
-k_opt <- k # optimal growth coefficient (source: fishbase.se/manual/key%20facts.htm)
-a <- 0.002 
+# tempr_dev <- tempr - tempr_opt
+# tempr_opt_dev <- tempr_opt - tempr_opt
+
+sp_opt_temp_optk <- target_species$sp_opt_temp # species optimal temperature (source: fishbase.se/manual/key%20facts.htm)
+sp_opt_temp_optk_dev <- target_species$sp_opt_temp - target_species$sp_opt_temp # optimal temperature (source: fishbase.se/manual/key%20facts.htm)
+# IPCC_scnrs <- (sp_opt_temp_optk - sp_opt_temp_optk) + c(1, 2, 4) # optimal temperature based on ipcc (CMIP6) projections (source: Sohou et al. 2020; https://www.ipcc.ch/report/ar6/wg1/downloads/factsheets/IPCC_AR6_WGI_Regional_Fact_Sheet_Australasia.pdf)
+
+# tempr_dev <- tempr - sp_opt_temp_optk # temperature deviation from optimal temperature
+tempr_dev <- tempr - tempr_opt # temperature deviation from optimal temperature
+
+k_opt <- target_species$growth_coef..yr.1. # optimal growth coefficient (source: fishbase.se/manual/key%20facts.htm)
+a <- 0.001 
 b <- 3.07 # source: fishbase.se/manual/key%20facts.htm
 decline_gro_temp <- target_species$dec_gr # decline in growth at the extreme temperatures
 # sln_opt <- target_species$sln_opt # slope of the growth performance curve at the optimal temperature
@@ -78,7 +84,8 @@ scnr_clim <- data.frame(tempr_dev = tempr_dev,
 for (i in 1:scnr_tempr){
 
 # Calculate new growth parameters
-    k_new_clim <- k_temp_function(tempr_dev[i], tempr_max_dev, tempr_min_dev, tempr_opt_dev, k_opt)
+    # k_new_clim <- k_temp_function(tempr_dev[i], tempr_max_dev, tempr_min_dev, tempr_opt_dev, k_opt)
+    k_new_clim <- k_temp_function(tempr_dev[i], tempr_max_dev, tempr_min_dev, sp_opt_temp_optk_dev, k_opt)
     #make sure K doesn't go less than zero
     k_new_clim <- max(c(0, k_new_clim))
 
@@ -86,13 +93,13 @@ for (i in 1:scnr_tempr){
     scnr_clim$k_new_clim[i] <- k_new_clim
 
     #update this with linf model... 
-    Linf_new_clim <- Linf_temp_function(k, Linf, k_new_clim, tempr_dev[i], decline_gro_temp)
+    Linf_new_clim <- Linf_temp_function(k_opt, Linf, k_new_clim, tempr_dev[i], decline_gro_temp)
     scnr_clim$Linf[i] <- Linf
     scnr_clim$Linf_new_clim[i] <- Linf_new_clim
 
   
     # #Comparison when the sensitivity is zero
-    Linf_new_clim_no_sens <- Linf_temp_function(k, Linf, k_new_clim, tempr_dev[i], 0)
+    Linf_new_clim_no_sens <- Linf_temp_function(k_opt, Linf, k_new_clim, tempr_dev[i], 0)
     scnr_clim$Linf_new_clim_not_sensitive[i] <- Linf_new_clim_no_sens
     
    
@@ -117,13 +124,13 @@ glinf <- ggplot(scnr_clim, aes(x = tempr_dev, y = Linf_new_clim)) +
 # make a ggplot to show Linf only
 gk <- ggplot(scnr_clim, aes(x = tempr_dev, y = k_new_clim)) +
   geom_line() +
-  geom_hline(yintercept = k, linetype = "dashed") + 
+  geom_hline(yintercept = k_opt, linetype = "dashed") + 
   geom_vline(xintercept = 0, linetype = "dashed") + 
   labs(title = "k under different climate scenarios",
        x = "Temperature deviation from optimal",
        y = "Growth coefficient") +
-    geom_text(aes(x = tempr_min_dev, y = k, label = "Tmin"), vjust = 1.5, size = 6) +
-    geom_text(aes(x = tempr_max_dev, y = k, label = "Tmax"), vjust = 1.5, size = 6)
+    geom_text(aes(x = tempr_min_dev, y = k_opt, label = "Tmin"), vjust = 1.5, size = 6) +
+    geom_text(aes(x = tempr_max_dev, y = k_opt, label = "Tmax"), vjust = 1.5, size = 6)
 
 gk + glinf
 # gk

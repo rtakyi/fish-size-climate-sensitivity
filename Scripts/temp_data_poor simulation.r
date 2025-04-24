@@ -19,24 +19,28 @@ source("Scripts/fish_size_functions v3.R")
 
 
 # Parameters of case study species
-target_species <- read.csv("Parameters/trial_parameters.csv")
+# target_species <- read.csv("Parameters/cs_sp_parameters_fast.csv")
+case_study_parameters <- read.csv("Parameters/cs_sp_parameters_fast.csv")
 
+target_species <- case_study_parameters[case_study_parameters$species == "Scomber colias" & case_study_parameters$id == "sc",]
 
 # Number of scenarios
 n <- nrow(target_species)
 
 # Parameters for environmental temperature change scenarios (minimum, maximum and optimal temperature)
-temp <- seq(12, 34, by = 0.1)   # temperature range (Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea; Idike and Lupo (2024). Analysis of sea surface temperature patterns, vari...(29.34))
+temp <- seq(5, 32, by = 0.1)   # temperature range (Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea; Idike and Lupo (2024). Analysis of sea surface temperature patterns, vari...(29.34))
 min_temp_dev <- -17.3   # minimum temperature deviation from optimal temperature
 max_temp_dev <- 10.7  # maximum temperature deviation from optimal temperature
-optimal_temp <- 27.13   #  source: Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea;
+# optimal_temp <- 27.13   #  source: Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea;
+sp_opt_temp_optk <- target_species$sp_opt_temp # species optimal temperature (source: fishbase.se/manual/key%20facts.htm)
 
 # IPCC scenarios with optimal temperature 
-IPCC_scnrs <- (optimal_temp - optimal_temp) + c(1.5, 2, 4)  # optimal temperature based on ipcc (CMIP6) projections (source: Sohou et al. 2020; https://www.ipcc.ch/report/ar6/wg1/downloads/factsheets/IPCC_AR6_WGI_Regional_Fact_Sheet_Australasia.pdf)
+# IPCC_scnrs <- (optimal_temp - optimal_temp) + c(1, 2, 4)  # optimal temperature based on ipcc (CMIP6) projections (source: Sohou et al. 2020; https://www.ipcc.ch/report/ar6/wg1/downloads/factsheets/IPCC_AR6_WGI_Regional_Fact_Sheet_Australasia.pdf)
+IPCC_scnrs <- (sp_opt_temp_optk - sp_opt_temp_optk) + c(1, 2, 4) # optimal temperature based on ipcc (CMIP6) projections (source: Sohou et al. 2020; https://www.ipcc.ch/report/ar6/wg1/downloads/factsheets/IPCC_AR6_WGI_Regional_Fact_Sheet_Australasia.pdf)
 
 # Temperature difference between optimal and temperature sequence
-optimal_temp_dev <- optimal_temp - optimal_temp
- 
+# optimal_temp_dev <- optimal_temp - optimal_temp
+ optimal_temp_dev <- sp_opt_temp_optk - sp_opt_temp_optk # optimal temperature (source: fishbase.se/manual/key%20facts.htm)
 
 # Temperature scenario length
 scnr_temp <- length(temp)
@@ -49,8 +53,9 @@ for (irow in 1:n){
   ## Add climate change impacts on Linf, Winf and K
   #one way to get all fmors and all temprs
   Fmort <- target_species$Fmort.[irow]
-  temp_dev <- temp - optimal_temp
-   
+  # temp_dev <- temp - optimal_temp
+  temp_dev <- temp - sp_opt_temp_optk # temperature deviation from optimal temperature
+  
   scnr_clim <- expand.grid(temp_dev = temp_dev, Fmort = target_species$Fmort.[irow], target_species = target_species$species[irow])
   
 
@@ -76,8 +81,8 @@ for (irow in 1:n){
   
   decline_gro_temp <- target_species$dec_gr[irow] # decline in growth at the extreme temperatures
 
-  sp_opt_temp_optk <- target_species$sp_opt_temp[irow] - optimal_temp # optimal temperature for each species (source: Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea; Idike and Lupo (2024). Analysis of sea surface temperature patterns, vari...(29.34))
-
+  # sp_opt_temp_optk <- target_species$sp_opt_temp[irow] - optimal_temp # optimal temperature for each species (source: Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea; Idike and Lupo (2024). Analysis of sea surface temperature patterns, vari...(29.34))
+  sp_opt_temp_optk_dev <- sp_opt_temp_optk[irow] - sp_opt_temp_optk # optimal temperature for each species (source: Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea; Idike and Lupo (2024). Analysis of sea surface temperature patterns, vari...(29.34))
 
   
   k_length <- 0.2 # slope of the logistic curve
@@ -89,7 +94,7 @@ for (irow in 1:n){
   for (i in 1:scnr_temp){
     
     # Calculate new growth parameters
-    k_new_clim <- k_temp_function(temp_dev[i], max_temp_dev, min_temp_dev, sp_opt_temp_optk, k_opt)
+    k_new_clim <- k_temp_function(temp_dev[i], max_temp_dev, min_temp_dev, sp_opt_temp_optk_dev, k_opt)
     #make sure K doesn't go less than zero
     k_new_clim <- max(c(0, k_new_clim))
 
@@ -98,9 +103,9 @@ for (irow in 1:n){
     scnr_clim$Linf_new_clim[i] <- Linf
     scnr_clim$k_new_clim[i] <- Linf_new_clim
     
-    # update Linf_new_clim with climate change by reducing Linf by 1 to 5% for every degree change in temperature
-    dyna_Linf_new_clim <- Linf_new_clim - (Linf_new_clim * 0.01 * temp_dev[i])
-
+    # update Linf_new_clim with climate change by reducing Linf by 1% for every degree change in temperature
+    # dyna_Linf_new_clim <- Linf_new_clim - (Linf_new_clim * 0.01 * temp_dev[i])
+    dyna_Linf_new_clim <- Linf_new_clim - (Linf_new_clim * 0.01 * abs(temp_dev[i]))
  
     Winf_new_clim <- a*Linf_new_clim^b
     
@@ -153,14 +158,14 @@ g5 <- ggplot(all_scnr_data) +
       aes(x = temp_dev, y = size_indicator_Linf, color = Fmort, group = Fmort) +
       geom_line() +
       facet_wrap(~target_species) + 
-      geom_vline(xintercept = optimal_temp_dev, linetype = 2) +
+      geom_vline(xintercept = sp_opt_temp_optk_dev, linetype = 2) +
       geom_vline(xintercept = IPCC_scnrs, linetype = 2, col = "grey") +
-      geom_vline(xintercept = sp_opt_temp_optk, linetype = 2, col = "grey") +
+      # geom_vline(xintercept = sp_opt_temp_optk, linetype = 2, col = "brown") +
       geom_hline(yintercept = k_opt, linetype = 2) +
-      annotate("text", x = optimal_temp_dev, y = max(all_scnr_data$size_indicator_Linf), 
+      annotate("text", x = sp_opt_temp_optk_dev, y = max(all_scnr_data$size_indicator_Linf), 
                label = "optimal_temp_dev", angle = 90, vjust = -0.5, hjust = 1, color = "black") +
-      annotate("text", x = sp_opt_temp_optk, y = max(all_scnr_data$size_indicator_Linf),
-               label = "sp_opt_temp_optk", angle = 90, vjust = -0.5, hjust = 1, color = "black") +
+      # annotate("text", x = sp_opt_temp_optk, y = max(all_scnr_data$size_indicator_Linf),
+      #          label = "sp_opt_temp_optk", angle = 90, vjust = -0.5, hjust = 1, color = "black") +
       annotate("text", x = min(all_scnr_data$Fmort), y = k_opt, 
                label = "k_opt", hjust = -0.2, vjust = 1.5, color = "black") +
       labs(title = "Sensitivity of size indicators to changes in Linf due to climate change", 
