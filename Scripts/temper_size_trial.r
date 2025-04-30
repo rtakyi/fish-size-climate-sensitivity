@@ -6,8 +6,8 @@ library(patchwork)
 
 # Set theme for output plots
 theme_set(theme_classic())
-theme_update(axis.text.x = element_text(colour = "black", size = 18), 
-              axis.text.y = element_text(colour = "black", size = 18), axis.title = element_text(size = 18))
+theme_update(axis.text.x = element_text(colour = "black", size = 12), 
+              axis.text.y = element_text(colour = "black", size = 12), axis.title = element_text(size = 12))
 
 
 
@@ -47,7 +47,7 @@ target_species <- case_study_parameters[1,]
 tempr <- seq(12, 34, by = 0.1) # temperature range (Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea; Idike and Lupo (2024). Analysis of sea surface temperature patterns, vari...(29.34))
 tempr_min_dev <- -17.3 # minimum temperature deviation from optimal temperature    
 tempr_max_dev <- 10.7 # maximum temperature deviation from optimal temperature   
-tempr_opt <- 27.13 #  source: Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea;
+tempr_opt <- target_species$sp_opt_temp #27.13 #  source: Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea;
 
 
 IPCC_scnrs <- (tempr_opt - tempr_opt) + c(1, 2, 4) # optimal temperature based on ipcc (CMIP6) projections (source: Sohou et al. 2020; https://www.ipcc.ch/report/ar6/wg1/downloads/factsheets/IPCC_AR6_WGI_Regional_Fact_Sheet_Australasia.pdf)
@@ -116,8 +116,8 @@ glinf <- ggplot(scnr_clim, aes(x = tempr_dev, y = Linf_new_clim)) +
   labs(title = "Asymptotic length under different climate scenarios",
        x = "Temperature deviation from optimal",
        y = "Asymptotic length") +
-    geom_text(aes(x = tempr_min_dev, y = Linf, label = "Tmin"), vjust = 1.5, size = 6) +
-    geom_text(aes(x = tempr_max_dev, y = Linf, label = "Tmax"), vjust = 1.5, size = 6)
+    geom_text(aes(x = tempr_min_dev, y = Linf, label = "Tmin"), vjust = 1.5, size = 4) +
+    geom_text(aes(x = tempr_max_dev, y = Linf, label = "Tmax"), vjust = 1.5, size = 4)
 
 
 
@@ -126,14 +126,14 @@ gk <- ggplot(scnr_clim, aes(x = tempr_dev, y = k_new_clim)) +
   geom_line() +
   geom_hline(yintercept = k_opt, linetype = "dashed") + 
   geom_vline(xintercept = 0, linetype = "dashed") + 
-  labs(title = "k under different climate scenarios",
+  labs(title = "K under different climate scenarios",
        x = "Temperature deviation from optimal",
        y = "Growth coefficient") +
-    geom_text(aes(x = tempr_min_dev, y = k_opt, label = "Tmin"), vjust = 1.5, size = 6) +
-    geom_text(aes(x = tempr_max_dev, y = k_opt, label = "Tmax"), vjust = 1.5, size = 6)
+    geom_text(aes(x = tempr_min_dev, y = k_opt, label = "Tmin"), vjust = 1.5, size = 4) +
+    geom_text(aes(x = tempr_max_dev, y = k_opt, label = "Tmax"), vjust = 1.5, size = 4)
 
-gk + glinf
+ gk + glinf
 # gk
 # save the only gk plot to a file
 
-# ggsave(gk, filename = paste0("Shared/Outputs/k_new_clim", target_species$species, ".tiff"), width = 6, height = 9, units = "in", dpi = 300)
+ggsave(gk +glinf, filename = paste0("Shared/Outputs/k_new_clim", target_species$species, ".tiff"), width = 9, height = 9, units = "in", dpi = 300)

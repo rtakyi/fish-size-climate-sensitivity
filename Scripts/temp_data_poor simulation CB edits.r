@@ -28,9 +28,9 @@ target_species <- case_study_parameters[case_study_parameters$species == "Lutjan
 n <- nrow(target_species)
 
 # Parameters for environmental temperature change scenarios (minimum, maximum and optimal temperature)
-temp <- seq(10, 19, by = 0.1)   # temperature range (Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea; Idike and Lupo (2024). Analysis of sea surface temperature patterns, vari...(29.34))
-min_temp_dev <- -4 #-17.3   # minimum temperature deviation from optimal temperature
-max_temp_dev <- 5 #10.7  # maximum temperature deviation from optimal temperature
+temp <- seq(5, 32, by = 0.1)   # temperature range (Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea; Idike and Lupo (2024). Analysis of sea surface temperature patterns, vari...(29.34))
+min_temp_dev <- -17.3   # minimum temperature deviation from optimal temperature
+max_temp_dev <- 10.7  # maximum temperature deviation from optimal temperature
 sp_opt_temp_optk <- target_species$sp_opt_temp # species optimal temperature (source: fishbase.se/manual/key%20facts.htm)
 
 # IPCC scenarios with optimal temperature 
@@ -53,7 +53,9 @@ for (irow in 1:n){
   Fmort <- target_species$Fmort.[irow]
   temp_dev <- temp - sp_opt_temp_optk # temperature deviation from optimal temperature
   
-  scnr_clim <- expand.grid(temp_dev = temp_dev, Fmort = target_species$Fmort.[irow], target_species = target_species$species[irow])
+  scnr_clim <- expand.grid(temp_dev = temp_dev, 
+                           Fmort = target_species$Fmort.[irow], 
+                           target_species = target_species$species[irow])
   
 
   scnr_clim$size_indicator_Linf <- NA
@@ -74,9 +76,10 @@ for (irow in 1:n){
   t0 <- target_species$t0.[irow]
   max_age <- target_species$max_age.[irow] 
   L50 <- target_species$L50..cm.[irow]
-
-  a <- target_species$scaler[irow] # a scaling factor that converts length to weight. The unit of the weight is in grams, so a = 0.001
-  b <- target_species$exponent[irow] # exponent of the length-weight relationship (source: Pauly 1983; Froese and Pauly 2023)
+  
+  #RT: These usually vary by species but I guess ok to use one standard value for interpretability? 
+  a <- 0.001 # a scaling factor that converts length to weight. The unit of the weight is in grams, so a = 0.001
+  b <- 3.07 # exponent of the length-weight relationship (source: Pauly 1983; Froese and Pauly 2023)
   
   decline_gro_temp <- target_species$dec_gr[irow] # decline in growth at the extreme temperatures
 
@@ -94,16 +97,19 @@ for (irow in 1:n){
     
     # Calculate new growth parameters
     # RT: use 0 here for optimal_temp as we are looking at deviations
-    # your sp_opt_temp_optk_dev was a vector of zeros, we just want a single value
+    # your sp_opt_temp_optk_dev parameter is a vector of zeros, we just want a single value
     k_new_clim <- k_temp_function(temp_dev[i], max_temp_dev, min_temp_dev, 0, k_opt)
     #make sure K doesn't go less than zero
     k_new_clim <- max(c(0, k_new_clim))
 
     #update this with linf model...
     Linf_new_clim <- Linf_temp_function(k, Linf, k_new_clim, temp_dev[i], decline_gro_temp)
-    scnr_clim$Linf_new_clim[i] <- Linf
-    scnr_clim$k_new_clim[i] <- Linf_new_clim
     
+    #RT: correcting this, check its right
+    scnr_clim$Linf_new_clim[i] <- Linf_new_clim
+    scnr_clim$k_new_clim[i] <- k_new_clim
+    
+    #RT: don't do this as we already do this in Linf_temp_function
     # update Linf_new_clim with climate change by reducing Linf by 1% for every degree change in temperature
     # dyna_Linf_new_clim <- Linf_new_clim - (Linf_new_clim * 0.01 * temp_dev[i])
     # dyna_Linf_new_clim <- Linf_new_clim - (Linf_new_clim * 0.01 * abs(temp_dev[i]))
@@ -144,7 +150,7 @@ g4 <- ggplot(scnr_clim, aes(x = temp_dev, y = size_indicator_Linf, group = Fmort
   gall <- c(gall, list(g4))
   
 }
-#  print(scnr_clim)
+ print(scnr_clim)
 # debugonce(ggplot(g4))
 # ls(scnr_clim)
 
@@ -152,8 +158,12 @@ g4 <- ggplot(scnr_clim, aes(x = temp_dev, y = size_indicator_Linf, group = Fmort
 
 # wrap_plots(gall)
 
-xlab <- "Deviation in temperature\n from optimal"
+#
+# Static Linf - What the manager thinks status is if they don't consider that Linf is changing
+#
 
+ xlab <- "Deviation of temperature \n from optimal"
+ 
 all_scnr_data <- bind_rows(all_scnrs)
 
 g5 <- ggplot(all_scnr_data) + 
@@ -161,51 +171,79 @@ g5 <- ggplot(all_scnr_data) +
       geom_line() +
       facet_wrap(~target_species) + 
       geom_vline(xintercept = sp_opt_temp_optk_dev, linetype = 2) +
+  #RT: I would not include the IPCC_scnrs. the temperature deviation depends on
+  # where is the range the population is
+      geom_vline(xintercept = IPCC_scnrs, linetype = 2, col = "grey") +
+      geom_hline(yintercept = k_opt, linetype = 2) +
+  #RT: why put a line for K-opt? Y-axis has nothing to do with k, its the size indicator
       annotate("text", x = sp_opt_temp_optk_dev, y = max(all_scnr_data$size_indicator_Linf), 
               label = "sp_opt_temp_optk_dev", angle = 90, vjust = -0.5, hjust = 1, color = "black") +
+      annotate("text", x = min(all_scnr_data$Fmort), y = k_opt,
+               label = "k_opt", hjust = -0.2, vjust = 1.5, color = "black") +
       labs(title = "Sensitivity of size indicators to changes in Linf due to climate change", 
-          x = "Deviation in temperature", y = "Size indicator") +
+          x = xlab, y = "Size indicator") +
   #
   scale_color_distiller(palette = "RdBu")
 
  g5
 
+# Save plot
+# ggsave(g5, filename = paste0("Shared/Outputs/size_indicator_sensitivity", target_species$species, ".tiff"), width = 6, height = 9, units = "in", dpi = 300)
 
-# Dynamic Linf
+
+#
+# Dynamic Linf - what status really is, when we account for mgmt changing
+#
+
+
 g6 <- ggplot(all_scnr_data) + 
   aes(x = temp_dev, y = size_indicator_Linf_dynamic, color = Fmort, group = Fmort) +
   geom_line() +
   facet_wrap(~target_species) + 
   geom_vline(xintercept = sp_opt_temp_optk_dev, linetype = 2) +
-  # geom_vline(xintercept = IPCC_scnrs, linetype = 2, col = "grey") +
-  annotate("text", x = sp_opt_temp_optk_dev, y = max(all_scnr_data$size_indicator_Linf_dynamic), 
-          label = "sp_opt_temp_optk_dev", angle = 90, vjust = -0.5, hjust = 1, color = "black") +
+  geom_vline(xintercept = IPCC_scnrs, linetype = 2, col = "grey") +
+  geom_hline(yintercept = k_opt, linetype = 2) +
+  annotate("text", x = sp_opt_temp_optk_dev, y = max(all_scnr_data$size_indicator_Linf), 
+           label = "sp_opt_temp_optk_dev", angle = 90, vjust = -0.5, hjust = 1, color = "black") +
+  annotate("text", x = min(all_scnr_data$Fmort), y = k_opt,
+           label = "k_opt", hjust = -0.2, vjust = 1.5, color = "black") +
   labs(title = "Sensitivity of size indicators to changes in Linf due to climate change", 
        x = "Deviation in temperature", y = "Size indicator") +
-
-  scale_color_distiller(palette = "RdBu") 
+  #
+  scale_color_distiller(palette = "RdBu")
 
 g6
 
+#
+# Difference between static and dynamic Linf
+# ie difference between what we think is status and what status actually is
+#
 
+#first calculate difference between the two indicators
 all_scnr_data$Linf_diff <- with(all_scnr_data, size_indicator_Linf - size_indicator_Linf_dynamic)
 
+#RT: This plot represents the difference between what we think the status is and what is should be.
+# positive values mean the manager is overestimating (too optimistic) status
+# negative values means the manager is underestimating (being too pessimistic or conservative)
+#
+# Plotting it like this we see that temp matters a lot more than Fmort. But generally 
+# we over/under estimate more for lower Fmort
 
+#
 g7 <- ggplot(all_scnr_data) + 
   aes(x = temp_dev, y = Linf_diff, color = Fmort, group = Fmort) +
   geom_line() +
   facet_wrap(~target_species) + 
   geom_vline(xintercept = sp_opt_temp_optk_dev, linetype = 2) +
-  # geom_vline(xintercept = IPCC_scnrs, linetype = 2, col = "grey") +
+  geom_vline(xintercept = IPCC_scnrs, linetype = 2, col = "grey") +
   geom_hline(yintercept = 0, linetype = 2) +
   annotate("text", x = sp_opt_temp_optk_dev, y = max(all_scnr_data$size_indicator_Linf), 
-          label = "sp_opt_temp_optk_dev", angle = 90, vjust = -0.5, hjust = 1, color = "black") +
-    labs(title = "Sensitivity of size indicators to changes in Linf due to climate change", 
+           label = "sp_opt_temp_optk_dev", angle = 90, vjust = -0.5, hjust = 1, color = "black") +
+  labs(title = "Sensitivity of size indicators to changes in Linf due to climate change", 
        x = "Deviation in temperature", y = "Size indicator") +
-
+  #
   scale_color_distiller(palette = "RdBu")
 
 g7
 
-# Save plots as one
-ggsave(g5 + g6 + g7, filename = paste0("Shared/Outputs/size_indicator_sensitivity", target_species$species, ".tiff"), width = 12, height = 9, units = "in", dpi = 300)
+
