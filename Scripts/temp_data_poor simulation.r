@@ -7,12 +7,15 @@ library(tidyverse)
 library(patchwork)
 library(reshape2)
 
+# Define reusable palette
+palette_name <- "RdBu"
+
 # Set theme for output plots
 theme_set(theme_classic())
-theme_update(axis.text.x = element_text(colour = "black", size = 16),
-              axis.text.y = element_text(colour = "black", size = 16),
+theme_update(axis.text.x = element_text(colour = "black", size = 12),
+              axis.text.y = element_text(colour = "black", size = 12),
               axis.title = element_text(size = 12),
-              strip.text = element_text(size = 16))
+              strip.text = element_text(size = 12))
 
 # Load functions
 source("Scripts/fish_size_functions v3.R")
@@ -20,24 +23,25 @@ source("Scripts/fish_size_functions v3.R")
 
 # Parameters of case study species
 # target_species <- read.csv("Parameters/cs_sp_parameters_fast.csv")
-case_study_parameters <- read.csv("Parameters/cs_sp_parameters_slow.csv")
+case_study_parameters <- read.csv("Parameters/cs_sp_parameters_fast.csv")
 
-target_species <- case_study_parameters[case_study_parameters$species == "Lutjanus fulgens" & case_study_parameters$id == "lf",]
+target_species <- case_study_parameters[case_study_parameters$species == "Sphyraena sphyraena" & case_study_parameters$id == "ss",]
 
 # Number of scenarios
 n <- nrow(target_species)
 
 # Parameters for environmental temperature change scenarios (minimum, maximum and optimal temperature)
-temp <- seq(10, 19, by = 0.1)   # temperature range (Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea; Idike and Lupo (2024). Analysis of sea surface temperature patterns, vari...(29.34))
-min_temp_dev <- -4 #-17.3   # minimum temperature deviation from optimal temperature
-max_temp_dev <- 5 #10.7  # maximum temperature deviation from optimal temperature
-sp_opt_temp_optk <- target_species$sp_opt_temp # species optimal temperature (source: fishbase.se/manual/key%20facts.htm)
+temp <- seq(5, 32, by = 0.1)   # temperature range (Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea; Idike and Lupo (2024). Analysis of sea surface temperature patterns, vari...(29.34))
+min_temp_dev <- -17.3   # minimum temperature deviation from optimal temperature 
+max_temp_dev <- 10.7  # maximum temperature deviation from optimal temperature
+sp_opt_temp <- target_species$sp_opt_temp # species optimal temperature (source: fishbase.se/manual/key%20facts.htm)
 
 # IPCC scenarios with optimal temperature 
-IPCC_scnrs <- (sp_opt_temp_optk - sp_opt_temp_optk) + c(1, 2, 4) # optimal temperature based on ipcc (CMIP6) projections (source: Sohou et al. 2020; https://www.ipcc.ch/report/ar6/wg1/downloads/factsheets/IPCC_AR6_WGI_Regional_Fact_Sheet_Australasia.pdf)
+IPCC_scnrs <- (sp_opt_temp - sp_opt_temp) + c(1, 2, 4) # optimal temperature based on ipcc (CMIP6) projections (source: Sohou et al. 2020; https://www.ipcc.ch/report/ar6/wg1/downloads/factsheets/IPCC_AR6_WGI_Regional_Fact_Sheet_Australasia.pdf)
 
 # Temperature difference between optimal and temperature sequence
 #  optimal_temp_dev <- sp_opt_temp_optk - sp_opt_temp_optk # optimal temperature (source: fishbase.se/manual/key%20facts.htm)
+
 
 # Temperature scenario length
 scnr_temp <- length(temp)
@@ -51,7 +55,7 @@ for (irow in 1:n){
   ## Add climate change impacts on Linf, Winf and K
   #one way to get all fmors and all temprs
   Fmort <- target_species$Fmort.[irow]
-  temp_dev <- temp - sp_opt_temp_optk # temperature deviation from optimal temperature
+  temp_dev <- temp - sp_opt_temp # temperature deviation from optimal temperature
   
   scnr_clim <- expand.grid(temp_dev = temp_dev, Fmort = target_species$Fmort.[irow], target_species = target_species$species[irow])
   
@@ -81,7 +85,7 @@ for (irow in 1:n){
   decline_gro_temp <- target_species$dec_gr[irow] # decline in growth at the extreme temperatures
 
   # sp_opt_temp_optk <- target_species$sp_opt_temp[irow] - optimal_temp # optimal temperature for each species (source: Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea; Idike and Lupo (2024). Analysis of sea surface temperature patterns, vari...(29.34))
-  sp_opt_temp_optk_dev <- sp_opt_temp_optk[irow] - sp_opt_temp_optk # optimal temperature for each species (source: Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea; Idike and Lupo (2024). Analysis of sea surface temperature patterns, vari...(29.34))
+  sp_opt_temp_dev <- sp_opt_temp[irow] - sp_opt_temp # optimal temperature for each species (source: Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea; Idike and Lupo (2024). Analysis of sea surface temperature patterns, vari...(29.34))
 
   
   k_length <- 0.2 # slope of the logistic curve
@@ -160,14 +164,15 @@ g5 <- ggplot(all_scnr_data) +
       aes(x = temp_dev, y = size_indicator_Linf, color = Fmort, group = Fmort) +
       geom_line() +
       facet_wrap(~target_species) + 
-      geom_vline(xintercept = sp_opt_temp_optk_dev, linetype = 2) +
-      annotate("text", x = sp_opt_temp_optk_dev, y = max(all_scnr_data$size_indicator_Linf), 
-              label = "sp_opt_temp_optk_dev", angle = 90, vjust = -0.5, hjust = 1, color = "black") +
+      geom_vline(xintercept = sp_opt_temp_dev, linetype = 2) +
+      annotate("text", x = sp_opt_temp_dev, y = max(all_scnr_data$size_indicator_Linf), 
+              label = "sp_opt_temp_dev", angle = 90, vjust = -0.5, hjust = 1, color = "black") +
       labs(title = "Sensitivity of size indicators to changes in Linf due to climate change", 
-          x = "Deviation in temperature", y = "Size indicator") +
-  #
+          x = "Deviation in temperature (°C)", y = "Size indicator") +
+  
   scale_color_distiller(palette = "RdBu")
 
+  
  g5
 
 
@@ -176,12 +181,11 @@ g6 <- ggplot(all_scnr_data) +
   aes(x = temp_dev, y = size_indicator_Linf_dynamic, color = Fmort, group = Fmort) +
   geom_line() +
   facet_wrap(~target_species) + 
-  geom_vline(xintercept = sp_opt_temp_optk_dev, linetype = 2) +
-  # geom_vline(xintercept = IPCC_scnrs, linetype = 2, col = "grey") +
-  annotate("text", x = sp_opt_temp_optk_dev, y = max(all_scnr_data$size_indicator_Linf_dynamic), 
-          label = "sp_opt_temp_optk_dev", angle = 90, vjust = -0.5, hjust = 1, color = "black") +
+  geom_vline(xintercept = sp_opt_temp_dev, linetype = 2) +
+  annotate("text", x = sp_opt_temp_dev, y = max(all_scnr_data$size_indicator_Linf_dynamic), 
+          label = "sp_opt_temp_dev", angle = 90, vjust = -0.5, hjust = 1, color = "black") +
   labs(title = "Sensitivity of size indicators to changes in Linf due to climate change", 
-       x = "Deviation in temperature", y = "Size indicator") +
+       x = "Deviation in temperature (°C)", y = "Size indicator") +
 
   scale_color_distiller(palette = "RdBu") 
 
@@ -195,17 +199,72 @@ g7 <- ggplot(all_scnr_data) +
   aes(x = temp_dev, y = Linf_diff, color = Fmort, group = Fmort) +
   geom_line() +
   facet_wrap(~target_species) + 
-  geom_vline(xintercept = sp_opt_temp_optk_dev, linetype = 2) +
-  # geom_vline(xintercept = IPCC_scnrs, linetype = 2, col = "grey") +
+  geom_vline(xintercept = sp_opt_temp_dev, linetype = 2) +
   geom_hline(yintercept = 0, linetype = 2) +
-  annotate("text", x = sp_opt_temp_optk_dev, y = max(all_scnr_data$size_indicator_Linf), 
-          label = "sp_opt_temp_optk_dev", angle = 90, vjust = -0.5, hjust = 1, color = "black") +
+  annotate("text", x = sp_opt_temp_dev, y = max(all_scnr_data$size_indicator_Linf), 
+          label = "sp_opt_temp_dev", angle = 90, vjust = -0.5, hjust = 1, color = "black") +
     labs(title = "Sensitivity of size indicators to changes in Linf due to climate change", 
-       x = "Deviation in temperature", y = "Size indicator") +
+       x = "Deviation in temperature (°C)", y = "Size indicator") +
 
   scale_color_distiller(palette = "RdBu")
 
 g7
 
 # Save plots as one
-ggsave(g5 + g6 + g7, filename = paste0("Shared/Outputs/size_indicator_sensitivity", target_species$species, ".tiff"), width = 12, height = 9, units = "in", dpi = 300)
+# ggsave(g5 + g6 + g7, filename = paste0("Shared/Outputs/size_indicator_sensitivity", target_species$species, ".tiff"), width = 12, height = 9, units = "in", dpi = 300)
+
+
+#  g8 <- all_scnr_data %>%
+#   filter(Fmort %in% c(0.01, 0.73, 1.77)) %>%
+#   ggplot() +
+#   aes(x = temp_dev, y = size_indicator_Linf, group = Fmort) +
+#   geom_line() +
+#   geom_line(aes(y = size_indicator_Linf_dynamic), color = "red") +
+#   facet_grid(Fmort~target_species) +
+#   geom_vline(xintercept = sp_opt_temp_dev, linetype = 2) +
+#   annotate("text", x = sp_opt_temp_dev, y = max(all_scnr_data$size_indicator_Linf), 
+#           label = "sp_opt_temp_dev", angle = 90, vjust = -0.5, hjust = 1, color = "black") +
+#           labs(title = "Sensitivity of size indicators to climate change at low_medium_high fishing mortality",
+#        x = "Deviation in temperature (°C)", y = "Size indicator") +
+  
+#   scale_color_distiller(palette = "RdBu")
+
+# g8
+  
+
+g8 <- all_scnr_data %>%
+  filter(temp_dev %in% c(-5, 0, +5), Fmort %in% c(0.01, 0.73, 1.77)) %>%
+  ggplot() +
+  aes(x = factor(target_species, levels = unique(target_species)), y = Linf_diff, color = factor(temp_dev)) +
+  geom_point(size = 6) +
+  geom_line() +
+  facet_wrap(~ Fmort) +
+  labs(title = "Sensitivity of Linf_diff to temperature and fishing mortality", 
+       x = "Species (fast to slow growing)", y = "Linf_diff", color = "Deviation in temperature (°C)") +
+  scale_fill_brewer(palette = "RdBu")
+
+g8
+# Define the order of species for the plot, from fast to slow-growing species
+species_order <- unique(all_scnr_data$target_species)
+
+
+# g8 <- all_scnr_data %>%
+#   filter(temp_dev %in% c(-5, 0, 5), Fmort %in% c(0.01, 0.73, 1.77)) %>%
+#   mutate(target_species = factor(target_species, levels = species_order)) %>%
+#   ggplot() +
+#   aes(x = target_species, y = Linf_diff, color = factor(temp_dev)) +
+#   geom_point(size = 6) +
+#   geom_line(aes(group = interaction(temp_dev, target_species))) +  # Group lines by temp_dev and species
+#   facet_wrap(~ Fmort) +
+#   labs(
+#     title = "Sensitivity of Linf_diff to temperature and fishing mortality", 
+#     x = "Species (fast to slow growing)", 
+#     y = "Linf_diff", 
+#     color = "Temp Deviation (°C)"
+#   ) +
+#   scale_color_brewer(palette = "RdBu")
+
+# g8
+
+# Save plots as one
+# ggsave(g8, filename = paste0("Shared/Outputs/size_indicator_sensitivity", target_species$species, "_Fmort.tiff"), width = 12, height = 9, units = "in", dpi = 300)
