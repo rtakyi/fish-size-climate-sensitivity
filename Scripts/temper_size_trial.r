@@ -6,8 +6,8 @@ library(patchwork)
 
 # Set theme for output plots
 theme_set(theme_classic())
-theme_update(axis.text.x = element_text(colour = "black", size = 12), 
-              axis.text.y = element_text(colour = "black", size = 12), axis.title = element_text(size = 12))
+theme_update(axis.text.x = element_text(colour = "black", size = 40), 
+              axis.text.y = element_text(colour = "black", size = 40), axis.title = element_text(size = 40))
 
 
 
@@ -44,9 +44,9 @@ case_study_parameters <- read.csv("Parameters/trial_parameters.csv")
 target_species <- case_study_parameters[1,]
 
 # Parameters for scenarios of changes in temperature, optimum temperature and growth performance due to climate change
-tempr <- seq(12, 34, by = 0.1) # temperature range (Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea; Idike and Lupo (2024). Analysis of sea surface temperature patterns, vari...(29.34))
-tempr_min_dev <- -17.3 # minimum temperature deviation from optimal temperature    
-tempr_max_dev <- 10.7 # maximum temperature deviation from optimal temperature   
+tempr <- seq(12, 28, by = 0.1) # temperature range (Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea; Idike and Lupo (2024). Analysis of sea surface temperature patterns, vari...(29.34))
+tempr_min_dev <- -10.3 # minimum temperature deviation from optimal temperature    
+tempr_max_dev <- 7.7 # maximum temperature deviation from optimal temperature   
 tempr_opt <- target_species$sp_opt_temp #27.13 #  source: Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea;
 
 
@@ -107,33 +107,41 @@ for (i in 1:scnr_tempr){
 
 }
 print(scnr_clim)
+
 # make a ggplot to show Linf only
 glinf <- ggplot(scnr_clim, aes(x = tempr_dev, y = Linf_new_clim)) +
   geom_line() +
   geom_line(aes(y = Linf_new_clim_not_sensitive), col = "red") +
   geom_hline(yintercept = Linf, linetype = "dashed") + 
   geom_vline(xintercept = 0, linetype = "dashed") + 
+  annotate("text", x = sp_opt_temp_optk_dev, y = scnr_clim$Linf, label = "sp_opt_temp_opt", angle = 90, vjust = 0, hjust = -0.8, size = 12) +
   labs(title = "Asymptotic length under different climate scenarios",
-       x = "Temperature deviation from optimal",
+       x = "Deviation in temperature (°C)",
        y = "Asymptotic length") +
-    geom_text(aes(x = tempr_min_dev, y = Linf, label = "Tmin"), vjust = 1.5, size = 4) +
-    geom_text(aes(x = tempr_max_dev, y = Linf, label = "Tmax"), vjust = 1.5, size = 4)
+    geom_text(aes(x = tempr_min_dev, y = Linf, label = "Tmin"), vjust = 1.2, hjust = 0.2, size = 10) +
+    geom_text(aes(x = tempr_max_dev, y = Linf, label = "Tmax"), vjust = 1.2, hjust = 1, size = 10)
+
+glinf
+
+#  Save gk plot to a file
+# ggsave(glinf, filename = paste0("Shared/Outputs/Linf_new_clim", target_species$species, ".png"), width = 9, height = 9, units = "in", dpi = 600)
 
 
 
-# make a ggplot to show Linf only
+# # make a ggplot to show Linf only
 gk <- ggplot(scnr_clim, aes(x = tempr_dev, y = k_new_clim)) +
   geom_line() +
   geom_hline(yintercept = k_opt, linetype = "dashed") + 
   geom_vline(xintercept = 0, linetype = "dashed") + 
+  annotate("text", x = sp_opt_temp_optk_dev, y = k_opt, label = "sp_opt_temp_opt", angle = 90, vjust = 0, hjust = 1.5, size = 14) +
   labs(title = "K under different climate scenarios",
-       x = "Temperature deviation from optimal",
+       x = "Deviation in temperature (°C)",
        y = "Growth coefficient") +
-    geom_text(aes(x = tempr_min_dev, y = k_opt, label = "Tmin"), vjust = 1.5, size = 4) +
-    geom_text(aes(x = tempr_max_dev, y = k_opt, label = "Tmax"), vjust = 1.5, size = 4)
+    geom_text(aes(x = tempr_min_dev, y = k_opt, label = "Tmin"), vjust = 1.5, hjust = 0.2, size = 12) +
+    geom_text(aes(x = tempr_max_dev, y = k_opt, label = "Tmax"), vjust = 1.5, hjust = 1, size = 12)
 
- gk + glinf
-# gk
-# save the only gk plot to a file
+# # # #  gk + glinf
+gk
+# # # save the only gk plot to a file
 
-ggsave(gk +glinf, filename = paste0("Shared/Outputs/k_new_clim", target_species$species, ".tiff"), width = 9, height = 9, units = "in", dpi = 300)
+ggsave(gk+glinf, filename = paste0("Shared/Outputs/k_new_clim", target_species$species, ".png"), width = 9, height = 9, units = "in", dpi = 600)
