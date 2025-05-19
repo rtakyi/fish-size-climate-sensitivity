@@ -1,0 +1,16 @@
+growth_strategy,species,static_highest,static_lowest,static_percentage_decline ,dynamic_highest,dynamic_lowest,dynamic_percentage_decline ,low_posit5,low_negt5,medium_posit5,medium_negt5,high_posit5,high_negt5
+Slow,Apsilus fuscus,0.42,0.29,31,0.41,0.29,29,0.11,0.095,0.1,0.08,0.085,0.065
+Slow,Caranx crysos,0.37,0.2,46,0.36,0.2,44,0.095,0.08,0.077,0.065,0.055,0.045
+Slow,Pagrus caeruloestictus,0.5,0.36,28,0.49,0.36,27,0.14,0.102,0.12,0.095,0.09,0.08
+Slow,Pseudotolithus senegalensis,0.34,0.14,59,0.33,0.145,56,0.085,0.075,0.06,0.05,0.04,0.03
+Slow,Lutjanus fulgens,0.34,0.23,32,0.33,0.24,27,0.09,0.075,0.08,0.065,0.065,0.05
+Slow,Lutjanus johnii,0.27,0.16,41,0.265,0.16,40,,0.06,,0.047,,0.035
+Slow,Lutjanus sebae,0.345,0.17,51,0.33,0.18,45,0.085,0.075,0.065,0.055,0.055,0.04
+Fast,Sardinella aurita,0.71,0.51,28,0.67,0.51,24,0.21,0.16,0.18,0.145,0.145,0.125
+Fast,Sardinella maderensis,0.72,0.4,44,0.66,0.44,39,0.23,0.16,0.17,0.13,0.12,0.09
+Fast,Engraulis encrasicolus,0.37,0.19,49,0.36,0.19,47,0.095,0.08,0.077,0.067,0.05,0.045
+Fast,Scomber colias,0.31,0.229,26,0.304,0.227,25,0.075,0.065,0.07,0.06,0.06,0.05
+Fast,Dentex angolensis,0.33,0.2,39,0.323,0.198,39,,0.075,,0.065,,0.045
+Fast,Sphyraena sphyraena,0.26,0.258,1,0.258,0.255,1,0.06,0.055,0.06,0.055,0.06,0.055
+Fast,Galeocerdo cuvier,0.41,0.31,31,0.41,0.315,23,0.105,0.09,0.088,0.08,0.075,0.07
+Fast,Sardinops sagax,0.4,0.21,48,0.39,0.21,46,0.11,,0.085,,0.06,
