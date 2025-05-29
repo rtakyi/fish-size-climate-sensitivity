@@ -59,8 +59,7 @@ for (irow in 1:n) {
                                  medium_posit5 = row$medium_posit5,
                                  medium_posit5 = row$medium_negt5,
                                  high_posit5 = row$high_posit5,
-                                 high_negt5 = row$high_negt5,
-                                                                  )
+                                 high_negt5 = row$high_negt5, )
 
     # Baseline values
     static_highest <- comparison$static_highest[irow]
@@ -115,9 +114,9 @@ g10 <- ggplot(
         values = c("Highest" = "darkgreen", "Lowest" = "darkorange")
     ) +
     labs(
-        title = "Highest and lowest size indicators under static and dynamic conditions for each species",
+        title = "Highest and lowest length-based indicators under static and dynamic conditions for each species",
         x = "Species",
-        y = "Size indicator"
+        y = "Length-based indicator"
     )
 
 g10
@@ -127,51 +126,51 @@ g10
 
 
 # Plot a bar chart for the percentages of the comparison with ggplot2
-# comparison_long <- comparison %>%
-#     mutate(
-#         growth_strategy = recode(
-#             growth_strategy,
-#             "Slow" = "Slow",
-#             "Fast" = "Fast"
-#         ),
-#         # Set factor levels to ensure Slow comes before Fast
-#         growth_strategy = factor(growth_strategy, levels = c("Slow", "Fast"))
-#     ) %>%
-#     pivot_longer(
-#         cols = c(
-#             static_percentage_decline, dynamic_percentage_decline
-#         ),
-#         names_to = "metric",
-#         values_to = "value"
-#     ) %>%
-#     mutate(
-#         metric = recode(
-#             metric,
-#             static_percentage_decline = "Static",
-#             dynamic_percentage_decline = "Dynamic"
-#         ),
-#         # Set factor levels to ensure static comes before dynamic
-#         metric = factor(
-#             metric,
-#             levels = c("Static", "Dynamic")
-#         )
-#     )
-# g11 <- ggplot(comparison_long,
-#     aes(x = species, y = value, fill = growth_strategy)
-# ) +
-#     geom_bar(stat = "identity", position = "dodge") +
-#     facet_wrap(~ metric, scales = "free_y") +
-#     scale_fill_manual(
-#         name = "Growth Strategy",
-#         values = c("Slow" = "red", "Fast" = "blue")
-#     ) +
-#     labs(
-#         title = "Percentage decline in size indicators under static and dynamic conditions for each species",
-#         x = "Species",
-#         y = "Percentage (%) decline in size indicator"
-#     )
+comparison_long <- comparison %>%
+    mutate(
+        growth_strategy = recode(
+            growth_strategy,
+            "Slow" = "Slow",
+            "Fast" = "Fast"
+        ),
+        # Set factor levels to ensure Slow comes before Fast
+        growth_strategy = factor(growth_strategy, levels = c("Slow", "Fast"))
+    ) %>%
+    pivot_longer(
+        cols = c(
+            static_percentage_decline, dynamic_percentage_decline
+        ),
+        names_to = "metric",
+        values_to = "value"
+    ) %>%
+    mutate(
+        metric = recode(
+            metric,
+            static_percentage_decline = "Static",
+            dynamic_percentage_decline = "Dynamic"
+        ),
+        # Set factor levels to ensure static comes before dynamic
+        metric = factor(
+            metric,
+            levels = c("Static", "Dynamic")
+        )
+    )
+g11 <- ggplot(comparison_long,
+    aes(x = species, y = value, fill = growth_strategy)
+) +
+    geom_bar(stat = "identity", position = "dodge") +
+    facet_wrap(~ metric, scales = "free_y") +
+    scale_fill_manual(
+        name = "Growth Strategy",
+        values = c("Slow" = "red", "Fast" = "blue")
+    ) +
+    labs(
+        title = "Percentage decline in length-based indicators under static and dynamic conditions for each species",
+        x = "Species",
+        y = "Percentage (%) decline in length-based indicator"
+    )
 
-# g11
+g11
 
 # # Save g11 plot to a file
 # # ggsave(g11, filename = paste0("Shared/Outputs/comparison_percentage_", comparison, ".png"), width = 18, height = 9, units = "in", dpi = 600)
@@ -179,7 +178,7 @@ g10
 
 # # Save g10 and g11 plots to a file  
 # # Combine g10 and g11 using patchwork and save as a single image
-# ggsave(g10 / g11, filename = "Shared/Outputs/comparison_combined.png", width = 18, height = 18, units = "in", dpi = 600)
+ggsave(g10 / g11, filename = "Shared/Outputs/comparison_combined.png", width = 18, height = 18, units = "in", dpi = 600)
 
 
 # Plot a bar chart for low, medium, and high values of the comparison with ggplot2
@@ -199,15 +198,15 @@ comparison_long <- comparison %>%
     ) %>%
     mutate(
         Fmort = case_when(
-            grepl("^low_", metric) ~ "0.01 yr¯¹",
-            grepl("^medium_", metric) ~ "0.40 yr¯¹",
-            grepl("^high_", metric) ~ "1.77 yr¯¹"
+            grepl("^low_", metric) ~ "0.01",
+            grepl("^medium_", metric) ~ "0.40",
+            grepl("^high_", metric) ~ "1.77"
         ),
         Temp = case_when(
             grepl("posit5$", metric) ~ "+5°C",
             grepl("negt5$", metric) ~ "-5°C"
         ),
-        Fmort = factor(Fmort, levels = c("0.01 yr¯¹", "0.40 yr¯¹", "1.77 yr¯¹")),
+        Fmort = factor(Fmort, levels = c("0.01", "0.40", "1.77")),
         Temp = factor(Temp, levels = c("+5°C", "-5°C"))
     )
 
@@ -221,9 +220,9 @@ g12 <- ggplot(comparison_long,
         values = c("+5°C" ="red", "-5°C" = "skyblue")
     ) +
     labs(
-        title = "Static vs dynamic size indicator differences for each species at +5°C and -5°C",
+        title = "Static vs dynamic length-based indicator differences for each species at +5°C and -5°C",
         x = "Species",
-        y = "Static vs dynamic size indicator differences"
+        y = "Static vs dynamic length-based indicator differences"
     ) 
 
 g12
