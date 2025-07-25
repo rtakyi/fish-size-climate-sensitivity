@@ -247,3 +247,19 @@ g7 <- ggplot(all_scnr_data) +
 g7
 
 
+unique(all_scnr_data$temp_dev)
+ all_scnr_data %>%
+   filter(temp_dev %in% c(-3, -1, 0, 1, 3)) %>%
+ ggplot() + 
+ aes(x = Fmort, y = size_indicator_Linf, group = temp_dev, color = temp_dev) +
+  #  aes(x = size_indicator_Linf, y = Fmort, group = temp_dev,color = temp_dev) +
+   geom_line() +
+   facet_wrap(~target_species) + 
+   # geom_vline(xintercept = sp_opt_temp_dev, linetype = 2) +
+   # annotate("text", x = sp_opt_temp_dev, y = max(all_scnr_data$size_indicator_Linf), 
+            # label = "sp_opt_temp_dev", angle = 90, vjust = -0.5, hjust = 1, size = 6, color = "black") +
+   labs(title = "Sensitivity of length indicators to changes in L∞ due to climate change", 
+        y= "static length indicator", x = "Fmort") +
+   
+   scale_color_distiller(palette = "Dark2",) + 
+   theme_bw()
