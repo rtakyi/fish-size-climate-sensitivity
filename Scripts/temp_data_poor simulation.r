@@ -179,28 +179,24 @@ g5 <- ggplot(all_scnr_data) +
  g5 <- g5 + theme(strip.text = element_text(face = "italic"))
 
 # # # Save plots
- ggsave(g5, filename = paste0("Shared/Outputs/size_indicator_sensitivity", target_species$species, ".png"), width = 12, height = 9, units = "in", dpi = 600)
+#  ggsave(g5, filename = paste0("Shared/Outputs/size_indicator_sensitivity", target_species$species, ".png"), width = 12, height = 9, units = "in", dpi = 600)
 
 
-unique(all_scnr_data$temp_dev)
- all_scnr_data %>%
-   filter(temp_dev %in% c(-5, -3, -1, 0, 1, 3, 5)) %>%
- ggplot() + 
- aes(x = Fmort, y = size_indicator_Linf, group = temp_dev, color = temp_dev) +
-  #  aes(x = size_indicator_Linf, y = Fmort, group = temp_dev,color = temp_dev) +
-   geom_line() +
-   facet_wrap(~target_species) + 
-   labs(title = "Sensitivity of length indicators to changes in L∞ due to climate change", 
-        y= "static length indicator", x = "Fmort") +
+# unique(all_scnr_data$temp_dev)
+#  all_scnr_data %>%
+#    filter(temp_dev %in% c(-5, -3, -1, 0, 1, 3, 5)) %>%
+#  ggplot() + 
+#  aes(x = Fmort, y = size_indicator_Linf, group = temp_dev, color = temp_dev) +
+#   #  aes(x = size_indicator_Linf, y = Fmort, group = temp_dev,color = temp_dev) +
+#    geom_line() +
+#    facet_wrap(~target_species) + 
+#    labs(title = "Sensitivity of length indicators to changes in L∞ due to climate change", 
+#         y= "static length indicator", x = "Fmort") +
 
-   scale_color_distiller(palette = "Viridis") + 
-   theme_bw()
-# Save the plot
-ggsave(filename = paste0("Shared/Outputs/size_indicator_sensitivity", target_species$species, "_Fmort.png"), width = 12, height = 9, units = "in", dpi = 600)
-
-
-
-
+#    scale_color_distiller(palette = "Dark2",) + 
+#    theme_bw()
+# # Save the plot
+# ggsave(filename = paste0("Shared/Outputs/size_indicator_sensitivity", target_species$species, "_Fmort.png"), width = 12, height = 9, units = "in", dpi = 600)
 
 
 
@@ -250,21 +246,21 @@ g6 <- g6 + theme(strip.text = element_text(face = "italic"))
 
 
 
-unique(all_scnr_data$temp_dev)
- all_scnr_data %>%
-   filter(temp_dev %in% c(-5, -3, -1, 0, 1, 3, 5)) %>%
- ggplot() + 
- aes(x = Fmort, y = size_indicator_Linf_dynamic, group = temp_dev, color = temp_dev) +
-  #  aes(x = size_indicator_Linf, y = Fmort, group = temp_dev,color = temp_dev) +
-   geom_line() +
-   facet_wrap(~target_species) + 
-   labs(title = "Sensitivity of length indicators to changes in L∞ due to climate change", 
-        y= "dynamic length indicator", x = "Fmort") +
+# unique(all_scnr_data$temp_dev)
+#  all_scnr_data %>%
+#    filter(temp_dev %in% c(-5, -3, -1, 0, 1, 3, 5)) %>%
+#  ggplot() + 
+#  aes(x = Fmort, y = size_indicator_Linf_dynamic, group = temp_dev, color = temp_dev) +
+#   #  aes(x = size_indicator_Linf, y = Fmort, group = temp_dev,color = temp_dev) +
+#    geom_line() +
+#    facet_wrap(~target_species) + 
+#    labs(title = "Sensitivity of length indicators to changes in L∞ due to climate change", 
+#         y= "dynamic length indicator", x = "Fmort") +
 
-   scale_color_distiller(palette = "Dark2",) + 
-   theme_bw()
-# Save the plot
-ggsave(filename = paste0("Shared/Outputs/size_indicator_sensitivity", target_species$species, "_Fmort_dynamic.png"), width = 12, height = 9, units = "in", dpi = 600)
+#    scale_color_distiller(palette = "Dark2",) + 
+#    theme_bw()
+# # Save the plot
+# ggsave(filename = paste0("Shared/Outputs/size_indicator_sensitivity", target_species$species, "_Fmort_dynamic.png"), width = 12, height = 9, units = "in", dpi = 600)
 
 all_scnr_data$Linf_diff <- with(all_scnr_data, size_indicator_Linf - size_indicator_Linf_dynamic)
 

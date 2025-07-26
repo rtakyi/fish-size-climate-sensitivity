@@ -318,89 +318,89 @@ for (irow in 1:n) {
 # Prepare data for bar plot (as before)
 # Prepare data for plotting highest and lowest values together for shared legend
 
-# # Combine highest and lowest into one long dataframe
-comparison_hilo_long <- comparison %>%
-    mutate(
-        growth_strategy = factor(growth_strategy, levels = c("Slow", "Fast"))
-    ) %>%
-    pivot_longer(
-        cols = c(static_highest, dynamic_highest, static_lowest, dynamic_lowest),
-        names_to = "metric",
-        values_to = "value"
-    ) %>%
-    mutate(
-        condition = case_when(
-            metric %in% c("static_highest", "static_lowest") ~ "Static",
-            metric %in% c("dynamic_highest", "dynamic_lowest") ~ "Dynamic"
-        ),
-        indicator = case_when(
-            metric %in% c("static_highest", "dynamic_highest") ~ "Highest values per species",
-            metric %in% c("static_lowest", "dynamic_lowest") ~ "Lowest values per species"
-        ),
-        condition = factor(condition, levels = c("Static", "Dynamic")),
-        indicator = factor(indicator, levels = c("Highest values per species", "Lowest values per species"))
-    )
+# # # Combine highest and lowest into one long dataframe
+# comparison_hilo_long <- comparison %>%
+#     mutate(
+#         growth_strategy = factor(growth_strategy, levels = c("Slow", "Fast"))
+#     ) %>%
+#     pivot_longer(
+#         cols = c(static_highest, dynamic_highest, static_lowest, dynamic_lowest),
+#         names_to = "metric",
+#         values_to = "value"
+#     ) %>%
+#     mutate(
+#         condition = case_when(
+#             metric %in% c("static_highest", "static_lowest") ~ "Static",
+#             metric %in% c("dynamic_highest", "dynamic_lowest") ~ "Dynamic"
+#         ),
+#         indicator = case_when(
+#             metric %in% c("static_highest", "dynamic_highest") ~ "Highest values per species",
+#             metric %in% c("static_lowest", "dynamic_lowest") ~ "Lowest values per species"
+#         ),
+#         condition = factor(condition, levels = c("Static", "Dynamic")),
+#         indicator = factor(indicator, levels = c("Highest values per species", "Lowest values per species"))
+#     )
 
-g14_combined <- ggplot(comparison_hilo_long,
-    aes(x = species, y = value, fill = condition)
-) +
-    geom_bar(stat = "identity", position = position_dodge(width = 0.8)) +
-    scale_fill_manual(
-        name = "Condition",
-        values = c("Static" = "brown", "Dynamic" = "orange")
-    ) +
-    facet_wrap(~ indicator, scales = "free_y") +
-    labs(
-        title = "Highest and lowest length indicator values under static and dynamic conditions at optimal temperature",
-        x = "Species",
-        y = "Length indicator"
-    ) +
-    facet_wrap(~ indicator, scales = "free_y") +
-    scale_y_continuous(
-        limits = c(0, 0.75),
-        expand = expansion(mult = c(0, 0.05))
-    )
+# g14_combined <- ggplot(comparison_hilo_long,
+#     aes(x = species, y = value, fill = condition)
+# ) +
+#     geom_bar(stat = "identity", position = position_dodge(width = 0.8)) +
+#     scale_fill_manual(
+#         name = "Condition",
+#         values = c("Static" = "brown", "Dynamic" = "orange")
+#     ) +
+#     facet_wrap(~ indicator, scales = "free_y") +
+#     labs(
+#         title = "Highest and lowest length indicator values under static and dynamic conditions at optimal temperature",
+#         x = "Species",
+#         y = "Length indicator"
+#     ) +
+#     facet_wrap(~ indicator, scales = "free_y") +
+#     scale_y_continuous(
+#         limits = c(0, 0.75),
+#         expand = expansion(mult = c(0, 0.05))
+#     )
 
-g14_combined
+# g14_combined
 
 
-# # Plot a grouped bar chart showing both static and dynamic percentage declines side by side for each species
+# # # Plot a grouped bar chart showing both static and dynamic percentage declines side by side for each species
 
-comparison_long <- comparison %>%
-    mutate(
-        growth_strategy = factor(growth_strategy, levels = c("Slow", "Fast"))
-    ) %>%
-    pivot_longer(
-        cols = c(static_percentage_decline, dynamic_percentage_decline),
-        names_to = "Condition",
-        values_to = "Percentage_Decline"
-    ) %>%
-    mutate(
-        Condition = recode(
-            Condition,
-            static_percentage_decline = "Static",
-            dynamic_percentage_decline = "Dynamic"
-        ),
-        Condition = factor(Condition, levels = c("Static", "Dynamic"))
-    )
+# comparison_long <- comparison %>%
+#     mutate(
+#         growth_strategy = factor(growth_strategy, levels = c("Slow", "Fast"))
+#     ) %>%
+#     pivot_longer(
+#         cols = c(static_percentage_decline, dynamic_percentage_decline),
+#         names_to = "Condition",
+#         values_to = "Percentage_Decline"
+#     ) %>%
+#     mutate(
+#         Condition = recode(
+#             Condition,
+#             static_percentage_decline = "Static",
+#             dynamic_percentage_decline = "Dynamic"
+#         ),
+#         Condition = factor(Condition, levels = c("Static", "Dynamic"))
+#     )
 
-g15 <- ggplot(comparison_long,
-    aes(x = species, y = Percentage_Decline, fill = Condition)
-) +
-    geom_bar(stat = "identity", position = position_dodge(width = 0.8)) +
-    scale_fill_manual(
-        name = "Condition",
-        values = c("Static" = "brown", "Dynamic" = "orange")
-    ) +
-    labs(
-        title = "Percentage decline in length indicator values between lowest and highest fishing mortality rates",
-        x = "Species",
-        y = "Percentage (%) decline in length indicator"
-    )
+# g15 <- ggplot(comparison_long,
+#     aes(x = species, y = Percentage_Decline, fill = Condition)
+# ) +
+#     geom_bar(stat = "identity", position = position_dodge(width = 0.8)) +
+#     scale_fill_manual(
+#         name = "Condition",
+#         values = c("Static" = "brown", "Dynamic" = "orange")
+#     ) +
+#     labs(
+#         title = "Percentage decline in length indicator values between lowest and highest fishing mortality rates",
+#         x = "Species",
+#         y = "Percentage (%) decline in length indicator"
+#     )
 
-g15
+# g15
 
-# # Save g15 plot to a file
-ggsave(g14_combined + g15, filename = paste0("Shared/Outputs/comparison_percentage_", comparison, ".png"), width = 26, height = 12, units = "in", dpi = 600)
+# # # Save g15 plot to a file
+# ggsave(g14_combined + g15, filename = paste0("Shared/Outputs/comparison_percentage_", comparison, ".png"), width = 26, height = 12, units = "in", dpi = 600)
 
-## Changes in indicators with temperature and fishing mortality
+# ## Changes in indicators with temperature and fishing mortality
