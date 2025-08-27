@@ -1,3 +1,6 @@
+# Simulation of the impact of climate change on fish size indicators using TropFishR package in R.
+# Created by: Richard Takyi and Christopher J. Brown
+
 
 rm(list = ls())
 
@@ -15,7 +18,7 @@ theme_set(theme_classic())
 theme_update(axis.text.x = element_text(colour = "black", size = 17),
               axis.text.y = element_text(colour = "black", size = 17),
               axis.title = element_text(size = 17),
-              strip.text = element_text(size = 17),
+              strip.text = element_text(size = 16),
               legend.text = element_text(size = 17),
               legend.title = element_text(size = 17),
               legend.key.size = unit(1, "cm"))
@@ -171,7 +174,7 @@ g5 <- ggplot(all_scnr_data) +
       annotate("text", x = sp_opt_temp_dev, y = max(all_scnr_data$size_indicator_Linf), 
               label = "sp_opt_temp_dev", angle = 90, vjust = -0.5, hjust = 1, size = 6, color = "black") +
       labs(title = "Sensitivity of length indicators to changes in L∞ due to climate change", 
-          x = "Deviation in temperature (°C)", y = "Static Length indicator") +
+          x = "Deviation in temperature (°C)", y = "Static length indicator") +
   
   scale_color_distiller(palette = "RdBu",)
 
@@ -238,7 +241,7 @@ g6 <- ggplot(all_scnr_data) +
   annotate("text", x = sp_opt_temp_dev, y = max(all_scnr_data$size_indicator_Linf_dynamic), 
           label = "sp_opt_temp_dev", angle = 90, vjust = -0.5, hjust = 1, size = 6, color = "black") +
   labs(title = "Sensitivity of length-based indicators to changes in L∞ due to climate change", 
-       x = "Deviation in temperature (°C)", y = "Dynamic Length indicator") +
+       x = "Deviation in temperature (°C)", y = "Dynamic length indicator") +
 
   scale_color_distiller(palette = "RdBu") 
 
@@ -274,15 +277,21 @@ g7 <- ggplot(all_scnr_data) +
   annotate("text", x = sp_opt_temp_dev, y = max(all_scnr_data$size_indicator_Linf), 
           label = "sp_opt_temp_dev", angle = 90, vjust = -0.5, hjust = 1, size = 6, color = "black") +
     labs(title = "Sensitivity of length-based indicators to changes in L∞ due to climate change", 
-       x = "Deviation in temperature (°C)", y = "Static vs dynamic lemgth indicator") +
+       x = "Deviation in temperature (°C)", y = "Estimation bias \n (Static vs dynamic lemgth indicator)") +
 
   scale_color_distiller(palette = "RdBu")
 
 g7 <- g7 + theme(strip.text = element_text(face = "italic"))
 
+# sen_temp_dev <- (g5 + g6 + g7) +
+#   plot_annotation(tag_levels = 'a', tag_prefix = '(', tag_suffix = ')') &
+#   theme(plot.tag = element_text(size = 20, vjust = -0.2))
+
+# sen_temp_dev
 
 # # Save plots as one
-# ggsave(g5 + g6 + g7, filename = paste0("Shared/Outputs/size_indicator_sensitivity", target_species$species, ".png"), width = 15, height = 8, units = "in", dpi = 600)
+ggsave(g5 + g6 + g7, filename = paste0("Shared/Outputs/size_indicator_sensitivity", target_species$species, ".png"), width = 15, height = 8, units = "in", dpi = 600)
+# ggsave(sen_temp_dev, filename = paste0("Shared/Outputs/size_indicator_sensitivity", target_species$species, ".tiff"), width = 15, height = 8, units = "in", dpi = 300)
 
 
 #  g8 <- all_scnr_data %>%
