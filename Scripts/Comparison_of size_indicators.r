@@ -16,15 +16,15 @@ library(scales)
 
 # Set theme for output plots
 theme_set(theme_classic())
-theme_update(axis.text.x = element_text(colour = "black", size = 18, angle = 45, hjust = 1, vjust = 1, face = "italic"),
-              axis.text.y = element_text(colour = "black", size = 18),
-              axis.title.y.right = element_text(colour = "black", size = 18),
-              axis.text.y.right = element_text(colour = "black", size = 18), 
-              axis.title = element_text(size = 18),
-              strip.text = element_text(size = 18),
-                legend.text = element_text(size = 18),
-                legend.title = element_text(size = 18),
-              plot.title = element_text(size = 18, hjust = 0.5))
+theme_update(axis.text.x = element_text(colour = "black", size = 19, angle = 45, hjust = 1, vjust = 1, face = "italic"),
+              axis.text.y = element_text(colour = "black", size = 19),
+              axis.title.y.right = element_text(colour = "black", size = 19),
+              axis.text.y.right = element_text(colour = "black", size = 19), 
+              axis.title = element_text(size = 19),
+              strip.text = element_text(size = 19),
+                legend.text = element_text(size = 19),
+                legend.title = element_text(size = 19),
+              plot.title = element_text(size = 19, hjust = 0.5))
 
 # Read in the data
 comparison <- read.csv("Parameters/comparison.csv")
@@ -83,67 +83,67 @@ for (irow in 1:n) {
 }
 
 
-# Plot a bar chart for factor changes in static vs dynamic conditions with ggplot2
-comparison_long <- comparison %>%
-    mutate(
-        growth_strategy = factor(growth_strategy, levels = c("Slow", "Fast"))
-    ) %>%
-    pivot_longer(
-        cols = c(factor_change_static_dynamic_hst, factor_change_static_dynamic_lst),
-        names_to = "metric",
-        values_to = "value"
-    ) %>%
-    mutate(
-        metric = recode(
-            metric,
-            factor_change_static_dynamic_hst = "Lowest fishing mortality rate",
-            factor_change_static_dynamic_lst = "Highest fishing mortality rate"
-        ),
-        metric = factor(metric, levels = c("Lowest fishing mortality rate", "Highest fishing mortality rate"))
-    )
+# # Plot a bar chart for factor changes in static (stationary) vs dynamic (non-stationary) conditions with ggplot2
+# comparison_long <- comparison %>%
+#     mutate(
+#         growth_strategy = factor(growth_strategy, levels = c("Slow", "Fast"))
+#     ) %>%
+#     pivot_longer(
+#         cols = c(factor_change_static_dynamic_hst, factor_change_static_dynamic_lst),
+#         names_to = "metric",
+#         values_to = "value"
+#     ) %>%
+#     mutate(
+#         metric = recode(
+#             metric,
+#             factor_change_static_dynamic_hst = "Lowest fishing mortality rate",
+#             factor_change_static_dynamic_lst = "Highest fishing mortality rate"
+#         ),
+#         metric = factor(metric, levels = c("Lowest fishing mortality rate", "Highest fishing mortality rate"))
+#     )
 
-g10 <- ggplot() +
-    # Bar plot
-    geom_bar(
-        data = comparison_long,
-        aes(x = species, y = value, fill = growth_strategy),
-        stat = "identity",
-        position = "dodge"
-    ) +
-    facet_wrap(~ metric, scales = "free_y") +
-    scale_fill_manual(
-        name = "Growth strategy",
-        values = c("Slow" = "lightblue", "Fast" = "orange")
-    ) +
-    scale_y_continuous(
-        name = "Difference in percentage estimation bias \n (between static and dynamic assessment)",
-    ) +
-    labs(
-        title = "Estimation factor difference between static and dynamic conditions for each species",
-        x = "Species"
-    ) +
-    facet_wrap(
-        ~ metric, 
-        scales = "free_y",
-        labeller = as_labeller(function(x) x)
-    ) +
-    # Set y-axis limit for "Lowest fishing mortality rate" facet
-    ggplot2::geom_blank(data = comparison_long %>% filter(metric == "Lowest fishing mortality rate") %>% mutate(value = 10), 
-                        aes(x = species, y = value))
+# g10 <- ggplot() +
+#     # Bar plot
+#     geom_bar(
+#         data = comparison_long,
+#         aes(x = species, y = value, fill = growth_strategy),
+#         stat = "identity",
+#         position = "dodge"
+#     ) +
+#     facet_wrap(~ metric, scales = "free_y") +
+#     scale_fill_manual(
+#         name = "Growth strategy",
+#         values = c("Slow" = "lightblue", "Fast" = "orange")
+#     ) +
+#     scale_y_continuous(
+#         name = "Difference in percentage estimation bias \n (between stationary and non-stationary assessment)",
+#     ) +
+#     labs(
+#         title = "Estimation factor difference between stationary and non-stationary conditions for each species",
+#         x = "Species"
+#     ) +
+#     facet_wrap(
+#         ~ metric, 
+#         scales = "free_y",
+#         labeller = as_labeller(function(x) x)
+#     ) +
+#     # Set y-axis limit for "Lowest fishing mortality rate" facet
+#     ggplot2::geom_blank(data = comparison_long %>% filter(metric == "Lowest fishing mortality rate") %>% mutate(value = 10), 
+#                         aes(x = species, y = value))
 
-# Set y-axis limit for the "Lowest fishing mortality rate" facet to 10
-g10 <- g10 + 
-    ggplot2::facet_wrap(
-        ~ metric, 
-        scales = "free_y",
-        labeller = as_labeller(function(x) x)
-    ) +
-    ggplot2::geom_blank(
-        data = comparison_long %>% filter(metric == "Lowest fishing mortality rate") %>% mutate(value = 10),
-        aes(x = species, y = value)
-    )
+# # Set y-axis limit for the "Lowest fishing mortality rate" facet to 10
+# g10 <- g10 + 
+#     ggplot2::facet_wrap(
+#         ~ metric, 
+#         scales = "free_y",
+#         labeller = as_labeller(function(x) x)
+#     ) +
+#     ggplot2::geom_blank(
+#         data = comparison_long %>% filter(metric == "Lowest fishing mortality rate") %>% mutate(value = 10),
+#         aes(x = species, y = value)
+#     )
 
-g10
+# g10
 
 
 # # # Save g10 plot to a file
@@ -155,7 +155,7 @@ g10
 # Reshape the data to long format for plotting multiple variables on y-axis
 # Combine static_highest/static_lowest and dynamic_highest/dynamic_lowest into two groups for plotting
 
-# # Prepare data for bar plot (as before)
+# # # Prepare data for bar plot (as before)
 # comparison_long <- comparison %>%
 #     mutate(
 #         growth_strategy = factor(growth_strategy, levels = c("Slow", "Fast"))
@@ -204,8 +204,8 @@ g10
 
 # g11
 
-# # # # Save g11 plot to a file
-# # # ggsave(g11, filename = paste0("Shared/Outputs/comparison_", comparison, ".png"), width = 17, height = 9, units = "in", dpi = 600)
+# # # Save g11 plot to a file
+# # ggsave(g11, filename = paste0("Shared/Outputs/comparison_", comparison, ".png"), width = 17, height = 9, units = "in", dpi = 600)
 
 
 # # Plot a bar chart for the percentages of the comparison with ggplot2
@@ -255,11 +255,11 @@ g10
 
 # g12
 
-# # Save g12 plot to a file
-# # ggsave(g12, filename = paste0("Shared/Outputs/comparison_percentage_", comparison, ".png"), width = 18, height = 9, units = "in", dpi = 600)
+# Save g12 plot to a file
+# ggsave(g12, filename = paste0("Shared/Outputs/comparison_percentage_", comparison, ".png"), width = 18, height = 9, units = "in", dpi = 600)
 
 
-# # Save g11 and g12 plots to a file  
+# Save g11 and g12 plots to a file  
 # # Combine g10 and g11 using patchwork and save as a single image
 # ggsave(g11 / g12, filename = "Shared/Outputs/comparison_combined.png", width = 22, height = 22, units = "in", dpi = 600)
 
@@ -307,9 +307,9 @@ g10
 #         expand = expansion(mult = c(0, 0.05))
 #     ) +
 #     labs(
-#         title = "Static vs dynamic length-based indicator differences for each species at +5°C and -5°C",
+#         title = "Stationary vs non-stationary length-based indicator differences for each species at +5°C and -5°C",
 #         x = "Species",
-#         y = "Estimation bias \n (Static vs dynamic length indicator)"
+#         y = "Estimation bias \n (Stationary vs non-stationary length indicator)"
 #     ) 
 
 # g13
@@ -320,7 +320,7 @@ g10
 # Prepare data for bar plot (as before)
 # Prepare data for plotting highest and lowest values together for shared legend
 
-# # # Combine highest and lowest into one long dataframe
+# # Combine highest and lowest into one long dataframe
 # comparison_hilo_long <- comparison %>%
 #     mutate(
 #         growth_strategy = factor(growth_strategy, levels = c("Slow", "Fast"))
@@ -332,14 +332,14 @@ g10
 #     ) %>%
 #     mutate(
 #         condition = case_when(
-#             metric %in% c("static_highest", "static_lowest") ~ "Static",
-#             metric %in% c("dynamic_highest", "dynamic_lowest") ~ "Dynamic"
+#             metric %in% c("static_highest", "static_lowest") ~ "Stationary",
+#             metric %in% c("dynamic_highest", "dynamic_lowest") ~ "Non-stationary"
 #         ),
 #         indicator = case_when(
 #             metric %in% c("static_highest", "dynamic_highest") ~ "Highest values per species",
 #             metric %in% c("static_lowest", "dynamic_lowest") ~ "Lowest values per species"
 #         ),
-#         condition = factor(condition, levels = c("Static", "Dynamic")),
+#         condition = factor(condition, levels = c("Stationary", "Non-stationary")),
 #         indicator = factor(indicator, levels = c("Highest values per species", "Lowest values per species"))
 #     )
 
@@ -349,11 +349,11 @@ g10
 #     geom_bar(stat = "identity", position = position_dodge(width = 0.8)) +
 #     scale_fill_manual(
 #         name = "Condition",
-#         values = c("Static" = "brown", "Dynamic" = "orange")
+#         values = c("Stationary" = "brown", "Non-stationary" = "orange")
 #     ) +
 #     facet_wrap(~ indicator, scales = "free_y") +
 #     labs(
-#         title = "Highest and lowest length indicator values under static and dynamic conditions at optimal temperature",
+#         title = "Highest and lowest length indicator values under stationary and non-stationary conditions at optimal temperature",
 #         x = "Species",
 #         y = "Length indicator"
 #     ) +
@@ -366,7 +366,7 @@ g10
 # g14_combined
 
 
-# # # Plot a grouped bar chart showing both static and dynamic percentage declines side by side for each species
+# # # Plot a grouped bar chart showing both stationary and non-stationary percentage declines side by side for each species
 
 # comparison_long <- comparison %>%
 #     mutate(
@@ -380,10 +380,10 @@ g10
 #     mutate(
 #         Condition = recode(
 #             Condition,
-#             static_percentage_decline = "Static",
-#             dynamic_percentage_decline = "Dynamic"
+#             static_percentage_decline = "Stationary",
+#             dynamic_percentage_decline = "Non-stationary"
 #         ),
-#         Condition = factor(Condition, levels = c("Static", "Dynamic"))
+#         Condition = factor(Condition, levels = c("Stationary", "Non-stationary"))
 #     )
 
 # g15 <- ggplot(comparison_long,
@@ -392,7 +392,7 @@ g10
 #     geom_bar(stat = "identity", position = position_dodge(width = 0.8)) +
 #     scale_fill_manual(
 #         name = "Condition",
-#         values = c("Static" = "brown", "Dynamic" = "orange")
+#         values = c("Stationary" = "brown", "Non-stationary" = "orange")
 #     ) +
 #     labs(
 #         title = "Percentage decline in length indicator values between lowest and highest fishing mortality rates",

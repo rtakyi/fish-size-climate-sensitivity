@@ -174,7 +174,7 @@ g5 <- ggplot(all_scnr_data) +
       annotate("text", x = sp_opt_temp_dev, y = max(all_scnr_data$size_indicator_Linf), 
               label = "sp_opt_temp_dev", angle = 90, vjust = -0.5, hjust = 1, size = 6, color = "black") +
       labs(title = "Sensitivity of length indicators to changes in L∞ due to climate change", 
-          x = "Deviation in temperature (°C)", y = "Static length indicator") +
+          x = "Deviation in temperature (°C)", y = "Stationary length indicator") +
   
   scale_color_distiller(palette = "RdBu",)
 
@@ -232,7 +232,7 @@ g5 <- ggplot(all_scnr_data) +
 
 
 
-# # Dynamic Linf
+# # Dynamic Linf (Non-stationary length indicator)
 g6 <- ggplot(all_scnr_data) + 
   aes(x = temp_dev, y = size_indicator_Linf_dynamic, color = Fmort, group = Fmort) +
   geom_line() +
@@ -241,7 +241,7 @@ g6 <- ggplot(all_scnr_data) +
   annotate("text", x = sp_opt_temp_dev, y = max(all_scnr_data$size_indicator_Linf_dynamic), 
           label = "sp_opt_temp_dev", angle = 90, vjust = -0.5, hjust = 1, size = 6, color = "black") +
   labs(title = "Sensitivity of length-based indicators to changes in L∞ due to climate change", 
-       x = "Deviation in temperature (°C)", y = "Dynamic length indicator") +
+       x = "Deviation in temperature (°C)", y = "Non-stationary length indicator") +
 
   scale_color_distiller(palette = "RdBu") 
 
@@ -277,7 +277,7 @@ g7 <- ggplot(all_scnr_data) +
   annotate("text", x = sp_opt_temp_dev, y = max(all_scnr_data$size_indicator_Linf), 
           label = "sp_opt_temp_dev", angle = 90, vjust = -0.5, hjust = 1, size = 6, color = "black") +
     labs(title = "Sensitivity of length-based indicators to changes in L∞ due to climate change", 
-       x = "Deviation in temperature (°C)", y = "Estimation bias \n (Static vs dynamic lemgth indicator)") +
+       x = "Deviation in temperature (°C)", y = "Estimation bias \n (Stationary vs non-stationary length indicator)") +
 
   scale_color_distiller(palette = "RdBu")
 
