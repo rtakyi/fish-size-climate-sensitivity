@@ -1,4 +1,4 @@
-growth_strategy,species,static_highest,static_lowest,static_percentage_decline ,dynamic_highest,dynamic_lowest,dynamic_percentage_decline ,low_posit5,low_negt5,medium_posit5,medium_negt5,high_posit5,high_negt5,factor_change_static_dynamic_hst_1,factor_change_static_dynamic_hst,factor_change_static_dynamic_lst_1,factor_change_static_dynamic_lst,sp_opt_temp
+growth_strategy,species,stationary_highest,stationary_lowest,stationary_percentage_decline ,nonstationary_highest,nonstationary_lowest,nonstationary_percentage_decline ,low_posit5,low_negt5,medium_posit5,medium_negt5,high_posit5,high_negt5,factor_change_stationary_nonstationary_hst_1,factor_change_stationary_nonstationary_hst,factor_change_stationary_nonstationary_lst_1,factor_change_stationary_nonstationary_lst,sp_opt_temp
 Fast,Apsilus fuscus,0.42,0.29,31,0.41,0.29,29,0.11,0.095,0.1,0.08,0.085,0.065,1.024390244,2.44,1,0,16.8
 Fast,Caranx crysos,0.37,0.2,46,0.36,0.2,44,0.095,0.08,0.077,0.065,0.055,0.045,1.027777778,2.78,1,0,24.9
 Fast,Pagrus caeruloestictus,0.5,0.36,28,0.49,0.36,27,0.14,0.102,0.12,0.095,0.09,0.08,1.020408163,2.04,1,0,17.5
