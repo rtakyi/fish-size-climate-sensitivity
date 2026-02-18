@@ -53,51 +53,51 @@ for (irow in 1:n) {
     # Create a data frame for comparison
     comparison_df <- data.frame(species = species, 
                                  growth_strategy = growth_strategy,
-                                 static_highest = row$static_highest,
-                                 static_lowest = row$static_lowest,
-                                 static_percentage_decline = row$static_percentage_decline,
-                                 dynamic_highest = row$dynamic_highest,
-                                 dynamic_lowest = row$dynamic_lowest,
-                                 dynamic_percentage_decline = row$dynamic_percentage_decline,
+                                 stationary_highest = row$stationary_highest,
+                                 stationary_lowest = row$stationary_lowest,
+                                 stationary_percentage_decline = row$stationary_percentage_decline,
+                                 nonstationary_highest = row$nonstationary_highest,
+                                 nonstationary_lowest = row$nonstationary_lowest,
+                                 nonstationary_percentage_decline = row$nonstationary_percentage_decline,
                                  low_posit5 = row$low_posit5,
                                  low_negt5 = row$low_negt5,
                                  medium_posit5 = row$medium_posit5,
                                  medium_posit5 = row$medium_negt5,
                                  high_posit5 = row$high_posit5,
                                  high_negt5 = row$high_negt5,
-                                 factor_change_static_dynamic_hst = row$factor_change_static_dynamic_hst,
-                                 factor_change_static_dynamic_lst = row$factor_change_static_dynamic_lst,
+                                 factor_change_stationary_nonstationary_hst = row$factor_change_stationary_nonstationary_hst,
+                                 factor_change_stationary_nonstationary_lst = row$factor_change_stationary_nonstationary_lst,
                                  sp_opt_temp = row$sp_opt_temp)
 
     # Baseline values
-    static_highest <- comparison$static_highest[irow]
-    static_lowest <- comparison$static_lowest[irow]
-    static_percentage_decline <- comparison$static_percentage_decline[irow]
-    dynamic_highest <- comparison$dynamic_highest[irow]
-    dynamic_lowest <- comparison$dynamic_lowest[irow]
-    dynamic_percentage_decline <- comparison$dynamic_percentage_decline[irow]
-    factor_change_static_dynamic_hst <- comparison$factor_change_static_dynamic_hst[irow]
-    factor_change_static_dynamic_lst <- comparison$factor_change_static_dynamic_lst[irow]
+    stationary_highest <- comparison$stationary_highest[irow]
+    stationary_lowest <- comparison$stationary_lowest[irow]
+    stationary_percentage_decline <- comparison$stationary_percentage_decline[irow]
+    nonstationary_highest <- comparison$nonstationary_highest[irow]
+    nonstationary_lowest <- comparison$nonstationary_lowest[irow]
+    nonstationary_percentage_decline <- comparison$nonstationary_percentage_decline[irow]
+    factor_change_stationary_nonstationary_hst <- comparison$factor_change_stationary_nonstationary_hst[irow]
+    factor_change_stationary_nonstationary_lst <- comparison$factor_change_stationary_nonstationary_lst[irow]
     sp_opt_temp <- comparison$sp_opt_temp[irow]
     
 }
 
 
-# Plot a bar chart for factor changes in static (stationary) vs dynamic (non-stationary) conditions with ggplot2
+# Plot a bar chart for factor changes in stationary vs non-stationary conditions with ggplot2
 comparison_long <- comparison %>%
     mutate(
         growth_strategy = factor(growth_strategy, levels = c("Slow", "Fast"))
     ) %>%
     pivot_longer(
-        cols = c(factor_change_static_dynamic_hst, factor_change_static_dynamic_lst),
+        cols = c(factor_change_stationary_nonstationary_hst, factor_change_stationary_nonstationary_lst),
         names_to = "metric",
         values_to = "value"
     ) %>%
     mutate(
         metric = recode(
             metric,
-            factor_change_static_dynamic_hst = "Lowest fishing mortality rate",
-            factor_change_static_dynamic_lst = "Highest fishing mortality rate"
+            factor_change_stationary_nonstationary_hst = "Lowest fishing mortality rate",
+            factor_change_stationary_nonstationary_lst = "Highest fishing mortality rate"
         ),
         metric = factor(metric, levels = c("Lowest fishing mortality rate", "Highest fishing mortality rate"))
     )
@@ -146,14 +146,14 @@ g10 <- g10 +
 g10
 
 
-# # # Save g10 plot to a file
-# ggsave(g10, filename = paste0("Shared/Outputs/comparison_factor_change_", comparison, ".png"), width = 18, height = 12, units = "in", dpi = 600)
+# # Save g10 plot to a file
+ggsave(g10, filename = paste0("Shared/Outputs/comparison_factor_change_", comparison, ".png"), width = 18, height = 12, units = "in", dpi = 600)
 
 
 
 # Plot a bar chart for the comparison with ggplot2
 # Reshape the data to long format for plotting multiple variables on y-axis
-# Combine static_highest/static_lowest and dynamic_highest/dynamic_lowest into two groups for plotting
+# Combine stationary_highest/stationary_lowest and nonstationary_highest/nonstationary_lowest into two groups for plotting
 
 # # # Prepare data for bar plot (as before)
 # comparison_long <- comparison %>%
@@ -161,23 +161,23 @@ g10
 #         growth_strategy = factor(growth_strategy, levels = c("Slow", "Fast"))
 #     ) %>%
 #     pivot_longer(
-#         cols = c(static_highest, static_lowest, dynamic_highest, dynamic_lowest),
+#         cols = c(stationary_highest, stationary_lowest, nonstationary_highest, nonstationary_lowest),
 #         names_to = "metric",
 #         values_to = "value"
 #     ) %>%
 #     mutate(
 #         group = case_when(
-#             metric %in% c("static_highest", "static_lowest") ~ "Static conditions",
-#             metric %in% c("dynamic_highest", "dynamic_lowest") ~ "Dynamic conditions"
+#             metric %in% c("stationary_highest", "stationary_lowest") ~ "Stationary conditions",
+#             metric %in% c("nonstationary_highest", "nonstationary_lowest") ~ "Non-stationary conditions"
 #         ),
 #         metric = recode(
 #             metric,
-#             static_highest = "Highest",
-#             static_lowest = "Lowest",
-#             dynamic_highest = "Highest",
-#             dynamic_lowest = "Lowest"
+#             stationary_highest = "Highest",
+#             stationary_lowest = "Lowest",
+#             nonstationary_highest = "Highest",
+#             nonstationary_lowest = "Lowest"
 #         ),
-#         group = factor(group, levels = c("Static conditions", "Dynamic conditions")),
+#         group = factor(group, levels = c("Stationary conditions", "Non-stationary conditions")),
 #         metric = factor(metric, levels = c("Highest", "Lowest"))
 #     )
 
@@ -221,7 +221,7 @@ g10
 #     ) %>%
 #     pivot_longer(
 #         cols = c(
-#             static_percentage_decline, dynamic_percentage_decline
+#             stationary_percentage_decline, nonstationary_percentage_decline
 #         ),
 #         names_to = "metric",
 #         values_to = "value"
@@ -229,13 +229,13 @@ g10
 #     mutate(
 #         metric = recode(
 #             metric,
-#             static_percentage_decline = "Static conditions",
-#             dynamic_percentage_decline = "Dynamic conditions"
+#             stationary_percentage_decline = "Stationary conditions",
+#             nonstationary_percentage_decline = "Non-stationary conditions"
 #         ),
-#         # Set factor levels to ensure static comes before dynamic
+#         # Set factor levels to ensure stationary comes before non-stationary
 #         metric = factor(
 #             metric,
-#             levels = c("Static conditions", "Dynamic conditions")
+#             levels = c("Stationary conditions", "Non-stationary conditions")
 #         )
 #     )
 # g12 <- ggplot(comparison_long,
@@ -255,7 +255,7 @@ g10
 
 # g12
 
-# Save g12 plot to a file
+# # Save g12 plot to a file
 # ggsave(g12, filename = paste0("Shared/Outputs/comparison_percentage_", comparison, ".png"), width = 18, height = 9, units = "in", dpi = 600)
 
 
@@ -320,87 +320,87 @@ g10
 # Prepare data for bar plot (as before)
 # Prepare data for plotting highest and lowest values together for shared legend
 
-# # Combine highest and lowest into one long dataframe
-# comparison_hilo_long <- comparison %>%
-#     mutate(
-#         growth_strategy = factor(growth_strategy, levels = c("Slow", "Fast"))
-#     ) %>%
-#     pivot_longer(
-#         cols = c(static_highest, dynamic_highest, static_lowest, dynamic_lowest),
-#         names_to = "metric",
-#         values_to = "value"
-#     ) %>%
-#     mutate(
-#         condition = case_when(
-#             metric %in% c("static_highest", "static_lowest") ~ "Stationary",
-#             metric %in% c("dynamic_highest", "dynamic_lowest") ~ "Non-stationary"
-#         ),
-#         indicator = case_when(
-#             metric %in% c("static_highest", "dynamic_highest") ~ "Highest values per species",
-#             metric %in% c("static_lowest", "dynamic_lowest") ~ "Lowest values per species"
-#         ),
-#         condition = factor(condition, levels = c("Stationary", "Non-stationary")),
-#         indicator = factor(indicator, levels = c("Highest values per species", "Lowest values per species"))
-#     )
+# Combine highest and lowest into one long dataframe
+comparison_hilo_long <- comparison %>%
+    mutate(
+        growth_strategy = factor(growth_strategy, levels = c("Slow", "Fast"))
+    ) %>%
+    pivot_longer(
+        cols = c(stationary_highest, nonstationary_highest, stationary_lowest, nonstationary_lowest),
+        names_to = "metric",
+        values_to = "value"
+    ) %>%
+    mutate(
+        condition = case_when(
+            metric %in% c("stationary_highest", "stationary_lowest") ~ "Stationary",
+            metric %in% c("nonstationary_highest", "nonstationary_lowest") ~ "Non-stationary"
+        ),
+        indicator = case_when(
+            metric %in% c("stationary_highest", "nonstationary_highest") ~ "Highest values per species",
+            metric %in% c("stationary_lowest", "nonstationary_lowest") ~ "Lowest values per species"
+        ),
+        condition = factor(condition, levels = c("Stationary", "Non-stationary")),
+        indicator = factor(indicator, levels = c("Highest values per species", "Lowest values per species"))
+    )
 
-# g14_combined <- ggplot(comparison_hilo_long,
-#     aes(x = species, y = value, fill = condition)
-# ) +
-#     geom_bar(stat = "identity", position = position_dodge(width = 0.8)) +
-#     scale_fill_manual(
-#         name = "Condition",
-#         values = c("Stationary" = "brown", "Non-stationary" = "orange")
-#     ) +
-#     facet_wrap(~ indicator, scales = "free_y") +
-#     labs(
-#         title = "Highest and lowest length indicator values under stationary and non-stationary conditions at optimal temperature",
-#         x = "Species",
-#         y = "Length indicator"
-#     ) +
-#     facet_wrap(~ indicator, scales = "free_y") +
-#     scale_y_continuous(
-#         limits = c(0, 0.75),
-#         expand = expansion(mult = c(0, 0.05))
-#     )
+g14_combined <- ggplot(comparison_hilo_long,
+    aes(x = species, y = value, fill = condition)
+) +
+    geom_bar(stat = "identity", position = position_dodge(width = 0.8)) +
+    scale_fill_manual(
+        name = "Condition",
+        values = c("Stationary" = "brown", "Non-stationary" = "orange")
+    ) +
+    facet_wrap(~ indicator, scales = "free_y") +
+    labs(
+        title = "Highest and lowest length indicator values under stationary and non-stationary conditions at optimal temperature",
+        x = "Species",
+        y = "Length indicator"
+    ) +
+    facet_wrap(~ indicator, scales = "free_y") +
+    scale_y_continuous(
+        limits = c(0, 0.75),
+        expand = expansion(mult = c(0, 0.05))
+    )
 
-# g14_combined
+g14_combined
 
 
-# # # Plot a grouped bar chart showing both stationary and non-stationary percentage declines side by side for each species
+# # Plot a grouped bar chart showing both stationary and non-stationary percentage declines side by side for each species
 
-# comparison_long <- comparison %>%
-#     mutate(
-#         growth_strategy = factor(growth_strategy, levels = c("Slow", "Fast"))
-#     ) %>%
-#     pivot_longer(
-#         cols = c(static_percentage_decline, dynamic_percentage_decline),
-#         names_to = "Condition",
-#         values_to = "Percentage_Decline"
-#     ) %>%
-#     mutate(
-#         Condition = recode(
-#             Condition,
-#             static_percentage_decline = "Stationary",
-#             dynamic_percentage_decline = "Non-stationary"
-#         ),
-#         Condition = factor(Condition, levels = c("Stationary", "Non-stationary"))
-#     )
+comparison_long <- comparison %>%
+    mutate(
+        growth_strategy = factor(growth_strategy, levels = c("Slow", "Fast"))
+    ) %>%
+    pivot_longer(
+        cols = c(stationary_percentage_decline, nonstationary_percentage_decline),
+        names_to = "Condition",
+        values_to = "Percentage_Decline"
+    ) %>%
+    mutate(
+        Condition = recode(
+            Condition,
+            stationary_percentage_decline = "Stationary",
+            nonstationary_percentage_decline = "Non-stationary"
+        ),
+        Condition = factor(Condition, levels = c("Stationary", "Non-stationary"))
+    )
 
-# g15 <- ggplot(comparison_long,
-#     aes(x = species, y = Percentage_Decline, fill = Condition)
-# ) +
-#     geom_bar(stat = "identity", position = position_dodge(width = 0.8)) +
-#     scale_fill_manual(
-#         name = "Condition",
-#         values = c("Stationary" = "brown", "Non-stationary" = "orange")
-#     ) +
-#     labs(
-#         title = "Percentage decline in length indicator values between lowest and highest fishing mortality rates",
-#         x = "Species",
-#         y = "Percentage (%) decline in length indicator"
-#     )
+g15 <- ggplot(comparison_long,
+    aes(x = species, y = Percentage_Decline, fill = Condition)
+) +
+    geom_bar(stat = "identity", position = position_dodge(width = 0.8)) +
+    scale_fill_manual(
+        name = "Condition",
+        values = c("Stationary" = "brown", "Non-stationary" = "orange")
+    ) +
+    labs(
+        title = "Percentage decline in length indicator values between lowest and highest fishing mortality rates",
+        x = "Species",
+        y = "Percentage (%) decline in length indicator"
+    )
 
-# g15
+g15
 
 # # # Save g15 plot to a file
 # ggsave(g14_combined + g15, filename = paste0("Shared/Outputs/comparison_percentage_", comparison, ".png"), width = 26, height = 12, units = "in", dpi = 600)
