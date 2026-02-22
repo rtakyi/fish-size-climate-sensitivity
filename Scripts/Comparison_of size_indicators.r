@@ -27,7 +27,9 @@ theme_update(axis.text.x = element_text(colour = "black", size = 19, angle = 45,
               plot.title = element_text(size = 19, hjust = 0.5))
 
 # Read in the data
-comparison <- read.csv("Parameters/comparison.csv")
+# comparison <- read.csv("Parameters/comparison.csv")
+comparison <- read.csv("Parameters/comparison_M_nonstationary.csv") 
+
 
 # Ensure growth_strategy and species are treated as factors
 comparison$growth_strategy <- as.factor(comparison$growth_strategy)
@@ -403,7 +405,7 @@ g15 <- ggplot(comparison_long,
 g15
 
 # # # Save g15 plot to a file
-# ggsave(g14_combined + g15, filename = paste0("Shared/Outputs/comparison_percentage_", comparison, ".png"), width = 26, height = 12, units = "in", dpi = 600)
+ggsave(g14_combined + g15, filename = paste0("Shared/Outputs/comparison_percentage_", comparison, ".png"), width = 26, height = 12, units = "in", dpi = 600)
 
 # # ## Changes in indicators with temperature and fishing mortality
 

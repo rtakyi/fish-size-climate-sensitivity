@@ -89,10 +89,15 @@ k_temp_function <- function(temp, max_temp, min_temp, optimal_temp, k_opt){
 }
 
 ## simulation of natural mortality from temperature: source: Pauly 1980; Froese and Pauly 2000
-M_temp_function <- function(temp, Linf, k_under_new_temp){
-    M_temp <- 10^(-0.066 - 0.279*log10(Linf) + 0.6543*log10(k_under_new_temp) + 0.4634*log10(temp))
+M_temp_function <- function(temp, Linf_new_clim, Linf_base, k_under_new_temp, k_base, temp_base, M_base){
+  mult <- (10^(-0.066 - 0.279*log10(Linf_new_clim) + 0.6543*log10(k_under_new_temp) + 0.4634*log10(temp)))/
+      (10^(-0.066 - 0.279*log10(Linf_base) + 0.6543*log10(k_base) + 0.4634*log10(temp_base)))
+    # mult <- ((k_under_new_temp / k_base)^0.6543) * ((temp / temp_base)^0.4634) * ((Linf / Linf_base)^(-0.279))
+  M_temp = M_base * mult
+    # M_temp <- 10^(-0.066 - 0.279*log10(Linf) + 0.6543*log10(k_under_new_temp) + 0.4634*log10(temp))
     return(M_temp)
 }
+
 
 
 ##  simulate temperature effect on growth performance and asymptotic length: source: Kielbassa et al. 2010; Mallet et al. 1999
@@ -111,15 +116,3 @@ Winf_temp_function <- function(Winf, Linf, Linf_temp, b){
 }
 
 
-## simulate yield per recruit using the Beverton-Holt model
-YPR_BH <- function(k, M, Linf, L50, Fmort){
-    # Calculate the age at which fish reach the length at first capture (L50)
-    age_at_L50 <- -log(1 - (L50 / Linf)) / k
-    # Calculate the total mortality (Z) as the sum of natural mortality (M) and fishing mortality (F)
-    Z <- M + Fmort
-    # Calculate the yield per recruit using the Beverton-Holt model
-    YPR <- (Fmort / Z) * (1 - exp(-Z * age_at_L50)) * (Linf - L50) / (1 - exp(-Z * age_at_L50))
-    return(YPR)
-}   
- 
- 

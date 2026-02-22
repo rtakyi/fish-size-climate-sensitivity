@@ -29,15 +29,15 @@ source("Scripts/fish_size_functions v3.R")
 
 # Parameters of case study species
 # target_species <- read.csv("Parameters/cs_sp_parameters_fast.csv")
-case_study_parameters <- read.csv("Parameters/cs_sp_parameters_fast.csv")
+case_study_parameters <- read.csv("Parameters/cs_sp_parameters_slow.csv")
 
-target_species <- case_study_parameters[case_study_parameters$species == "Sardinops sagax" & case_study_parameters$id == "ss",]
+target_species <- case_study_parameters[case_study_parameters$species == "Pseudotolithus senegalensis" & case_study_parameters$id == "ps",]
 
 # Number of scenarios
 n <- nrow(target_species)
 
 # Parameters for environmental temperature change scenarios (minimum, maximum and optimal temperature)
-temp <- seq(10, 23, by = 0.1)   # temperature range (Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea; Idike and Lupo (2024). Analysis of sea surface temperature patterns, vari...(29.34))
+temp <- seq(17.5, 32.1, by = 0.1)   # temperature range (Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea; Idike and Lupo (2024). Analysis of sea surface temperature patterns, vari...(29.34))
 min_temp_dev <- -9.5   # minimum temperature deviation from optimal temperature 
 max_temp_dev <- 6.0  # maximum temperature deviation from optimal temperature
 sp_opt_temp <- target_species$sp_opt_temp # species optimal temperature (source: fishbase.se/manual/key%20facts.htm)
@@ -109,13 +109,17 @@ for (irow in 1:n){
     #make sure K doesn't go less than zero
     k_new_clim <- max(c(0, k_new_clim))
 
-    M_new_clim <- M_temp_function(temp_dev[i], Linf, k_new_clim)
-
+    
     #update this with linf model...
     Linf_new_clim <- Linf_temp_function(k, Linf, k_new_clim, temp_dev[i], decline_gro_temp)
     scnr_clim$Linf_new_clim[i] <- Linf
     scnr_clim$k_new_clim[i] <- Linf_new_clim
     
+    #update natural mortality with temperature
+    # M_new_clim <- M_temp_function(temp[i], Linf, Linf_new_clim, k_new_clim, k, temp[i], M)
+    M_new_clim <- M_temp_function(temp[i], Linf_new_clim, Linf, k_new_clim, k, sp_opt_temp, M)
+
+
     # update Linf_new_clim with climate change by reducing Linf by 1% for every degree change in temperature
     # dyna_Linf_new_clim <- Linf_new_clim - (Linf_new_clim * 0.01 * temp_dev[i])
     # dyna_Linf_new_clim <- Linf_new_clim - (Linf_new_clim * 0.01 * abs(temp_dev[i]))
@@ -124,17 +128,13 @@ for (irow in 1:n){
     
 
     ## Calculate YPR model with new Linf growth parameters
-    dat_clim <- abundance_catch_at_age(max_age, N0, Linf_new_clim, Winf_new_clim, k_new_clim, t0, a, b, M, L50, k_length, Fmort)
-      # dat_clim <- abundance_catch_at_age(max_age, N0, Linf_new_clim, Winf_new_clim, k_new_clim, t0, a, b, M_new_clim, L50, k_length, Fmort)
+    # dat_clim <- abundance_catch_at_age(max_age, N0, Linf_new_clim, Winf_new_clim, k_new_clim, t0, a, b, M, L50, k_length, Fmort)
+      dat_clim <- abundance_catch_at_age(max_age, N0, Linf_new_clim, Winf_new_clim, k_new_clim, t0, a, b, M_new_clim, L50, k_length, Fmort)
     # ind_temp <- stock_indicators(dat_clim, Linf, dyna_Linf_new_clim, Winf_new_clim)
-    yield_per_recruit <- YPR_BH(k_new_clim, M_new_clim, Linf_new_clim, L50, Fmort)
-    yield_per_recruit_no_clim <- YPR_BH(k_new_clim, M_new_clim, Linf, L50, Fmort)
     ind_temp <- stock_indicators(dat_clim, Linf, Linf_new_clim, Winf)
     scnr_clim$size_indicator_Linf[i] <- ind_temp$mlength_indicator
     scnr_clim$size_indicator_Linf_dynamic[i] <- ind_temp$mlength_indicator_dynamic
     scnr_clim$Fmort <- Fmort
-    scnr_clim$yield_per_recruit[i] <- yield_per_recruit
-    scnr_clim$yield_per_recruit_no_clim[i] <- yield_per_recruit_no_clim
     # scnr_clim$size_indicator_Winf[i] <- ind_tempr$mweight_indicator
     
     
@@ -318,26 +318,26 @@ ggsave(g5 + g6 + g7, filename = paste0("Shared/Outputs/size_indicator_sensitivit
   
 #   scale_color_distiller(palette = "RdBu")
 
-# g8
-# # Save plots
-# # ggsave(g8, filename = paste0("Shared/Outputs/size_indicator_sensitivity", target_species$species, "_Fmort.png"), width = 12, height = 9, units = "in", dpi = 600)
+# # g8
+# # # Save plots
+# # # ggsave(g8, filename = paste0("Shared/Outputs/size_indicator_sensitivity", target_species$species, "_Fmort.png"), width = 12, height = 9, units = "in", dpi = 600)
 
 
-# g9 <- all_scnr_data %>%
-#   filter(temp_dev %in% c(-5, 0, +5), Fmort %in% c(0.01, 0.4, 1.77)) %>%
-#   ggplot() +
-#   aes(x = factor(target_species, levels = unique(target_species)), y = Linf_diff, color = factor(temp_dev)) +
-#   geom_point(size = 10) +
-#   geom_line() +
-#   facet_wrap(~ Fmort) +
-#   labs(title = "Sensitivity of L∞ diff to temperature and fishing mortality", 
-#        x = "Species (fast to slow growing)", y = "Static vs dynamic length-based indicator differences", color = "Deviation in temperature (°C)") +
-#   scale_color_brewer(palette = "RdBu")
+g9 <- all_scnr_data %>%
+  filter(temp_dev %in% c(-5, 0, +5), Fmort %in% c(0.01, 0.4, 1.77)) %>%
+  ggplot() +
+  aes(x = factor(target_species, levels = unique(target_species)), y = Linf_diff, color = factor(temp_dev)) +
+  geom_point(size = 10) +
+  geom_line() +
+  facet_wrap(~ Fmort) +
+  labs(title = "Sensitivity of L∞ diff to temperature and fishing mortality", 
+       x = "Species (fast to slow growing)", y = "Stationary vs non-stationary length-based indicator differences", color = "Deviation in temperature (°C)") +
+  scale_color_brewer(palette = "RdBu")
 
-# g9 <- g9 + theme(axis.text.x = element_text(face = "italic"))
+g9 <- g9 + theme(axis.text.x = element_text(face = "italic"))
 
-# # # Save plots 
-# ggsave(g9, filename = paste0("Shared/Outputs/size_indicator_sensitivity", target_species$species, "Linf_diff.png"), width = 15, height = 8, units = "in", dpi = 600)
+# # Save plots 
+ggsave(g9, filename = paste0("Shared/Outputs/size_indicator_sensitivity", target_species$species, "Linf_diff.png"), width = 15, height = 8, units = "in", dpi = 600)
 
 
 # # Save plots as one
@@ -353,42 +353,10 @@ ggsave(g5 + g6 + g7, filename = paste0("Shared/Outputs/size_indicator_sensitivit
 #   geom_point(size = 10) +
 #   facet_wrap(~ target_species) +
 #   labs(title = "Sensitivity of L∞ diff to temperature and fishing mortality", 
-#        x = "Fishing mortality rate (yr¯¹)", y = "Static vs dynamic length-based indicator differences", color = "Deviation in temperature (°C)") +
+#        x = "Fishing mortality rate (yr¯¹)", y = "Stationary vs non-stationary length-based indicator differences", color = "Deviation in temperature (°C)") +
 #   scale_color_brewer(palette = "RdBu")
 
 # g10 <- g10 + theme(strip.text = element_text(face = "italic"))
 
 # # # Save plots 
 # ggsave(g10, filename = paste0("Shared/Outputs/size_indicator_sensitivity", target_species$species, "Linf_diff.png"), width = 15, height = 8, units = "in", dpi = 600)
-
-
-# simulate yield per recruit without climate change impacts on Linf
-g16 <- ggplot(all_scnr_data) + 
-  aes(x = temp_dev, y = yield_per_recruit_no_clim, color = Fmort, group = Fmort) +
-  geom_line() +
-  facet_wrap(~target_species) + 
-  geom_vline(xintercept = sp_opt_temp_dev, linetype = 2) +
-  annotate("text", x = sp_opt_temp_dev, y = max(all_scnr_data$yield_per_recruit_no_clim), 
-          label = "sp_opt_temp_dev", angle = 90, vjust = -0.5, hjust = 1, size = 6, color = "black") +
-    labs(title = "Sensitivity of yield per recruit to changes in L∞ due to climate change", 
-       x = "Deviation in temperature (°C)", y = "Yield per recruit without climate change impacts on L∞") +
-
-  scale_color_distiller(palette = "RdBu")
-
-
-# simulate yield per recruit with new growth parameters and new Linf under climate change
-g17 <- ggplot(all_scnr_data) + 
-  aes(x = temp_dev, y = yield_per_recruit, color = Fmort, group = Fmort) +
-  geom_line() +
-  facet_wrap(~target_species) + 
-  geom_vline(xintercept = sp_opt_temp_dev, linetype = 2) +
-  annotate("text", x = sp_opt_temp_dev, y = max(all_scnr_data$yield_per_recruit), 
-          label = "sp_opt_temp_dev", angle = 90, vjust = -0.5, hjust = 1, size = 6, color = "black") +
-    labs(title = "Sensitivity of yield per recruit to changes in L∞ due to climate change", 
-       x = "Deviation in temperature (°C)", y = "Yield per recruit with climate change impacts on L∞") +
-
-  scale_color_distiller(palette = "RdBu")
-
-
-# Save the combined plot
-ggsave(g16 + g17, filename = paste0("Shared/Outputs/yield_per_recruit_sensitivity", target_species$species, ".png"), width = 15, height = 8, units = "in", dpi = 600)  

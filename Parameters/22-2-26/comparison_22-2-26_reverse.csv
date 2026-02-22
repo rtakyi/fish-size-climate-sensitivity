@@ -1,0 +1,16 @@
+growth_strategy,species,stationary_highest,stationary_lowest,stationary_percentage_decline ,nonstationary_highest,nonstationary_lowest,nonstationary_percentage_decline ,low_posit5,low_negt5,medium_posit5,medium_negt5,high_posit5,high_negt5,factor_change_stationary_nonstationary_hst_1,factor_change_stationary_nonstationary_hst,factor_change_stationary_nonstationary_lst_1,factor_change_stationary_nonstationary_lst,sp_opt_temp
+Fast,Apsilus fuscus,0.42,0.29,31,0.41,0.29,29,0.11,0.095,0.1,0.08,0.085,0.065,0.98,-2.38,1,0,16.8
+Fast,Caranx crysos,0.37,0.2,46,0.36,0.2,44,0.095,0.08,0.077,0.065,0.055,0.045,0.97,-2.7,1,0,24.9
+Fast,Pagrus caeruloestictus,0.5,0.36,28,0.49,0.36,27,0.14,0.102,0.12,0.095,0.09,0.08,0.98,-2,1,0,17.5
+Slow,Pseudotolithus senegalensis,0.34,0.14,59,0.33,0.145,56,0.085,0.075,0.06,0.05,0.04,0.03,0.97,-2.94,1.04,3.57,26.3
+Fast,Lutjanus fulgens,0.34,0.23,32,0.33,0.24,27,0.09,0.075,0.08,0.065,0.065,0.05,0.97,-2.94,1.04,4.35,16.3
+Slow,Lutjanus johnii,0.27,0.16,41,0.265,0.16,40,,0.06,,0.047,,0.035,0.98,-1.85,1,0,28.2
+Slow,Lutjanus sebae,0.345,0.17,51,0.33,0.18,45,0.085,0.075,0.065,0.055,0.055,0.04,0.96,-4.35,1.06,5.88,27.1
+Fast,Sardinella aurita,0.71,0.51,28,0.67,0.51,24,0.21,0.16,0.18,0.145,0.145,0.125,0.94,-5.63,1,0,18.8
+Fast,Sardinella maderensis,0.72,0.4,44,0.66,0.44,39,0.23,0.16,0.17,0.13,0.12,0.09,0.92,-8.33,1.1,10,21
+Fast,Engraulis encrasicolus,0.37,0.19,49,0.36,0.19,47,0.095,0.08,0.077,0.067,0.05,0.045,0.97,-2.7,1,0,10.8
+Fast,Scomber colias,0.31,0.229,26,0.304,0.227,25,0.075,0.065,0.07,0.06,0.06,0.05,0.98,-1.94,0.99,-0.87,22.5
+Fast,Dentex angolensis,0.33,0.2,39,0.323,0.198,39,,0.075,,0.065,,0.045,0.98,-2.12,0.99,-1,16.7
+Slow,Sphyraena sphyraena,0.26,0.258,1,0.258,0.255,1,0.06,0.055,0.06,0.055,0.06,0.055,0.99,-0.77,0.99,-1.16,18.3
+Slow,Galeocerdo cuvier,0.41,0.31,31,0.41,0.315,23,0.105,0.09,0.088,0.08,0.075,0.07,1,0,1.02,1.61,26.4
+Fast,Sardinops sagax,0.4,0.21,48,0.39,0.21,46,0.11,,0.085,,0.06,,0.975,-2.5,1,0,17.9
