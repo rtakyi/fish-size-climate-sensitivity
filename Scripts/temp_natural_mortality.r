@@ -11,17 +11,28 @@ theme_update(axis.text.x = element_text(colour = "black", size = 24),
               axis.text.y = element_text(colour = "black", size = 24), axis.title = element_text(size = 24),
               plot.title = element_text(size = 26, hjust = 0.5))
 
-fish_data <- read.csv("Parameter/cs_sp_parameters_slow.csv")
 
+# target_species <- read.csv("Parameters/cs_sp_parameters_fast.csv")
+case_study_parameters <- read.csv("Parameters/cs_sp_parameters_slow.csv")
+
+fish_data <- case_study_parameters[case_study_parameters$species == "Pseudotolithus senegalensis" & case_study_parameters$id == "ps",]
 
 # Set the parameters for the functions
 temp <- seq(18, 35, by = 0.1) # temperature range (made-up numbers)
-Linf_base <- 100
-Linf_new_clim <- 90
+
 k_under_new_temp <- 0.5
-k_base <-fish_data$growth_
-temp_base <- fish_data$sp_opt_temp[which(fish_data$species == "Pseudotolithus senegalensis" & fish_data$id == "ps")] # optimal temperature for the species (source: fishbase.se/manual/key%20facts.htm)
-M_base <- fish_data$M.[which(fish_data$species == "Pseudotolithus senegalensis" & fish_data$id == "ps")]
+
+
+
+for(irow in 1:n){
+Linf_base <- fish_base$Linf.[irow]
+k_base <-fish_data$growth_coef.[irow]
+temp_base <- fish_data$sp_opt_temp.[irow] 
+M_base <- fish_data$M.[irow]
+
+Linf_new_clim <- fish_data$Linf.[irow]
+}
+
 
 
 ## simulation of natural mortality from temperature: source: Pauly 1980; Froese and Pauly 2000
