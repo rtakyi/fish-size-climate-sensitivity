@@ -15,24 +15,22 @@ theme_update(axis.text.x = element_text(colour = "black", size = 24),
 # target_species <- read.csv("Parameters/cs_sp_parameters_fast.csv")
 case_study_parameters <- read.csv("Parameters/cs_sp_parameters_slow.csv")
 
-fish_data <- case_study_parameters[case_study_parameters$species == "Pseudotolithus senegalensis" & case_study_parameters$id == "ps",]
+fish_data <- case_study_parameters[case_study_parameters$species == "Sphyraena sphyraena" & case_study_parameters$id == "ss",]
 
 # Set the parameters for the functions
 temp <- seq(18, 35, by = 0.1) # temperature range (made-up numbers)
 
-k_under_new_temp <- 0.5
+# Extract base parameters for the species
+Linf_base <- fish_data$Linf[1]
+k_base <- fish_data$growth_coef[1]
+temp_base <- fish_data$sp_opt_temp[1] 
+M_base <- fish_data$M[1]
 
+# assuming a 1% increase in K per degree increase in temperature
+k_under_new_temp <- k_base * (1 + 0.01 * (temp - temp_base))
 
-
-for(irow in 1:n){
-Linf_base <- fish_base$Linf.[irow]
-k_base <-fish_data$growth_coef.[irow]
-temp_base <- fish_data$sp_opt_temp.[irow] 
-M_base <- fish_data$M.[irow]
-
-Linf_new_clim <- fish_data$Linf.[irow]
-}
-
+# assuming a 1% decrease in Linf per degree increase in temperature
+Linf_new_clim <- Linf_base * (1 - 0.01 * (temp - temp_base))
 
 
 ## simulation of natural mortality from temperature: source: Pauly 1980; Froese and Pauly 2000
@@ -52,14 +50,12 @@ M_temp_function <- function(temp, Linf_new_clim, Linf_base, k_under_new_temp, k_
 # plot M_temp_function across temperature range with ggplot
 M_temp_values <- M_temp_function(temp, Linf_new_clim, Linf_base, k_under_new_temp, k_base, temp_base, M_base)
 M_temp_df <- data.frame(temp = temp, M_temp = M_temp_values)
-g1 <- ggplot(M_temp_df, aes(x = temp, y = M_temp)) +
+ggplot(M_temp_df, aes(x = temp, y = M_temp)) +
   geom_line() +
   labs(x = "Temperature (°C)", y = "Natural mortality (M)") +
-  ggtitle("Effect of Temperature on Natural Mortality") +
-  theme(plot.title = element_text(hjust = 0.5))
+  ggtitle(paste("Effect of Temperature on Natural Mortality -", fish_data$species[1])) +
+  theme(plot.title = element_text(hjust = 0.5, size = 20, face = "italic"))
 
-  g1
 
 # save plot to a file
-ggsave(g1, filename = "Shared/Outputs/temperature_effect_on_natural_mortality.png", width = 10, height = 6, units = "in", dpi = 600)    
-
+ggsave(filename = paste0("Shared/Outputs/temperature_effect_on_natural_mortality_", fish_data$species[1], ".png"), width = 10, height = 6, units = "in", dpi = 600)    

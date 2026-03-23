@@ -31,13 +31,13 @@ source("Scripts/fish_size_functions v3.R")
 # target_species <- read.csv("Parameters/cs_sp_parameters_fast.csv")
 case_study_parameters <- read.csv("Parameters/cs_sp_parameters_slow.csv")
 
-target_species <- case_study_parameters[case_study_parameters$species == "Pseudotolithus senegalensis" & case_study_parameters$id == "ps",]
+target_species <- case_study_parameters[case_study_parameters$species == "Sphyraena sphyraena" & case_study_parameters$id == "ss",]
 
 # Number of scenarios
 n <- nrow(target_species)
 
 # Parameters for environmental temperature change scenarios (minimum, maximum and optimal temperature)
-temp <- seq(17.5, 32.1, by = 0.1)   # temperature range (Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea; Idike and Lupo (2024). Analysis of sea surface temperature patterns, vari...(29.34))
+temp <- seq(9.5, 28.7, by = 0.1)   # temperature range (Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea; Idike and Lupo (2024). Analysis of sea surface temperature patterns, vari...(29.34))
 min_temp_dev <- -9.5   # minimum temperature deviation from optimal temperature 
 max_temp_dev <- 6.0  # maximum temperature deviation from optimal temperature
 sp_opt_temp <- target_species$sp_opt_temp # species optimal temperature (source: fishbase.se/manual/key%20facts.htm)
@@ -115,10 +115,9 @@ for (irow in 1:n){
     scnr_clim$Linf_new_clim[i] <- Linf
     scnr_clim$k_new_clim[i] <- Linf_new_clim
     
-    #update natural mortality with temperature
-    # M_new_clim <- M_temp_function(temp[i], Linf, Linf_new_clim, k_new_clim, k, temp[i], M)
+    #calculate natural mortality with temperature
     M_new_clim <- M_temp_function(temp[i], Linf_new_clim, Linf, k_new_clim, k, sp_opt_temp, M)
-
+  
 
     # update Linf_new_clim with climate change by reducing Linf by 1% for every degree change in temperature
     # dyna_Linf_new_clim <- Linf_new_clim - (Linf_new_clim * 0.01 * temp_dev[i])
@@ -162,14 +161,6 @@ g4 <- ggplot(scnr_clim, aes(x = temp_dev, y = size_indicator_Linf, group = Fmort
   gall <- c(gall, list(g4))
   
 }
-
-#  print(scnr_clim)
-# debugonce(ggplot(g4))
-# ls(scnr_clim)
-
-# gall
-
-# wrap_plots(gall)
 
 xlab <- "Deviation in temperature\n from optimal"
 
@@ -277,6 +268,7 @@ g6 <- g6 + theme(strip.text = element_text(face = "italic"))
 all_scnr_data$Linf_diff <- with(all_scnr_data, size_indicator_Linf - size_indicator_Linf_dynamic)
 
 
+
 g7 <- ggplot(all_scnr_data) + 
   aes(x = temp_dev, y = Linf_diff, color = Fmort, group = Fmort) +
   geom_line() +
@@ -284,7 +276,7 @@ g7 <- ggplot(all_scnr_data) +
   geom_vline(xintercept = sp_opt_temp_dev, linetype = 2) +
   geom_hline(yintercept = 0, linetype = 2) +
   annotate("text", x = sp_opt_temp_dev, y = max(all_scnr_data$size_indicator_Linf), 
-          label = "sp_opt_temp_dev", angle = 90, vjust = -0.5, hjust = 1, size = 6, color = "black") +
+            label = "sp_opt_temp_dev", angle = 90, vjust = -0.5, hjust = 1, size = 6, color = "black") +
     labs(title = "Sensitivity of length-based indicators to changes in L∞ due to climate change", 
        x = "Deviation in temperature (°C)", y = "Estimation bias \n (Stationary vs non-stationary length indicator)") +
 
@@ -360,3 +352,4 @@ ggsave(g9, filename = paste0("Shared/Outputs/size_indicator_sensitivity", target
 
 # # # Save plots 
 # ggsave(g10, filename = paste0("Shared/Outputs/size_indicator_sensitivity", target_species$species, "Linf_diff.png"), width = 15, height = 8, units = "in", dpi = 600)
+
