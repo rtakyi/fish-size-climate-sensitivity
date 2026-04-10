@@ -27,8 +27,8 @@ theme_update(axis.text.x = element_text(colour = "black", size = 19, angle = 49,
               plot.title = element_text(size = 19, hjust = 0.5))
 
 # Read in the data
-# comparison <- read.csv("Parameters/comparison.csv")
-comparison <- read.csv("Parameters/comparison_M_nonstationary.csv") 
+comparison <- read.csv("Parameters/comparison.csv")
+# comparison <- read.csv("Parameters/comparison_M_nonstationary.csv") 
 
 
 # Ensure growth_strategy and species are treated as factors
@@ -124,7 +124,7 @@ g10 <- ggplot() +
         values = c("Slow" = "lightblue", "Fast" = "orange")
     ) +
     scale_y_continuous(
-        name = "Difference in percentage estimation bias \n (between stationary and non-stationary assessment)",
+        name = "Difference in percentage estimation divergence \n (between stationary and non-stationary assessment)",
     ) +
     labs(
         title = "Estimation factor difference between stationary and non-stationary conditions for each species under changing M",
@@ -147,8 +147,8 @@ g10 <- g10 +
         labeller = as_labeller(function(x) x)
     ) +
     scale_y_continuous(
-                name = "Difference in percentage estimation bias \n (between stationary and non-stationary assessment)",
-                limits = c(-5, 60),
+                name = "Difference in percentage estimation divergence \n (between stationary and non-stationary assessment)",
+                limits = c(-6, 60),
                 expand = expansion(mult = c(0, 0.05))
     ) +
     ggplot2::geom_blank(
@@ -322,7 +322,7 @@ g13 <- ggplot(comparison_long,
     labs(
         title = "Stationary vs non-stationary length-based indicator differences for each species at +5°C and -5°C",
         x = "Species",
-        y = "Estimation bias \n (Stationary vs non-stationary length indicator)"
+        y = "Estimation divergence \n (Stationary vs non-stationary length indicator)"
     ) 
 
 g13
@@ -372,7 +372,7 @@ g14_combined <- ggplot(comparison_hilo_long,
     ) +
     facet_wrap(~ indicator, scales = "free_y") +
     scale_y_continuous(
-        limits = c(0, 1.6),
+        limits = c(0, 0.8),
         expand = expansion(mult = c(0, 0.05))
     )
 
@@ -408,7 +408,7 @@ g15 <- ggplot(comparison_long,
         values = c("Stationary" = "brown", "Non-stationary" = "orange")
     ) +
         scale_y_continuous(
-            limits = c(0, 80),
+            limits = c(0, 60),
             expand = expansion(mult = c(0, 0.05))
         ) +
         labs(

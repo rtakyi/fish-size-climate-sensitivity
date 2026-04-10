@@ -66,6 +66,7 @@ indicators <- with(dat, {
   data.frame(mweight = sum((abundance * weight) / sum(abundance)),
                            mlength = sum((abundance * length) / sum(abundance)),
                            total_catch = sum(catch),
+                           mlength_catch = sum((catch * length) / sum(catch)),
                            total_catch_weight = sum(catch_weight),
                            total_abundance = sum(abundance),
                            total_biomass = sum(abundance * weight)
@@ -74,6 +75,8 @@ indicators <- with(dat, {
     indicators$mlength_indicator <- indicators$mlength/Linf
     indicators$mlength_indicator_dynamic <- indicators$mlength/Linf_updated 
     indicators$mweight_indicator <- indicators$mweight/Winf
+    indicators$mlength_catch_indicator <- indicators$mlength_catch/Linf
+    indicators$mlength_catch_indicator_dynamic <- indicators$mlength_catch/Linf_updated
     indicators$length_weight_ratio <- indicators$mlength_indicator/indicators$mweight_indicator
     indicators$biomass_per_recruit <- indicators$total_biomass/indicators$total_abundance
   return(indicators)
@@ -114,5 +117,4 @@ Winf_temp_function <- function(Winf, Linf, Linf_temp, b){
     asymp_W_temp <- Winf * (Linf_temp / Linf)^b 
     return(asymp_W_temp)
 }
-
 

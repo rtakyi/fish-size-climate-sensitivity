@@ -59,3 +59,11 @@ ggplot(M_temp_df, aes(x = temp, y = M_temp)) +
 
 # save plot to a file
 ggsave(filename = paste0("Shared/Outputs/temperature_effect_on_natural_mortality_", fish_data$species[1], ".png"), width = 10, height = 6, units = "in", dpi = 600)    
+
+
+
+
+
+
+
+
