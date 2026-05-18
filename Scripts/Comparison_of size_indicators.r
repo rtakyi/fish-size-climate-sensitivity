@@ -27,8 +27,8 @@ theme_update(axis.text.x = element_text(colour = "black", size = 19, angle = 49,
               plot.title = element_text(size = 19, hjust = 0.5))
 
 # Read in the data
-comparison <- read.csv("Parameters/comparison.csv")
-# comparison <- read.csv("Parameters/comparison_M_nonstationary.csv") 
+# comparison <- read.csv("Parameters/comparison.csv")
+comparison <- read.csv("Parameters/comparison_M_nonstationary.csv") 
 
 
 # Ensure growth_strategy and species are treated as factors
@@ -372,7 +372,7 @@ g14_combined <- ggplot(comparison_hilo_long,
     ) +
     facet_wrap(~ indicator, scales = "free_y") +
     scale_y_continuous(
-        limits = c(0, 0.8),
+        limits = c(0, 1.6),
         expand = expansion(mult = c(0, 0.05))
     )
 
@@ -408,7 +408,7 @@ g15 <- ggplot(comparison_long,
         values = c("Stationary" = "brown", "Non-stationary" = "orange")
     ) +
         scale_y_continuous(
-            limits = c(0, 60),
+            limits = c(0, 80),
             expand = expansion(mult = c(0, 0.05))
         ) +
         labs(

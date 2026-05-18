@@ -31,13 +31,13 @@ source("Scripts/fish_size_functions v3.R")
 # target_species <- read.csv("Parameters/cs_sp_parameters_fast.csv")
 case_study_parameters <- read.csv("Parameters/cs_sp_parameters_slow.csv")
 
-target_species <- case_study_parameters[case_study_parameters$species == "Pseudotolithus senegalensis" & case_study_parameters$id == "ps",]
+target_species <- case_study_parameters[case_study_parameters$species == "Galeocerdo cuvier" & case_study_parameters$id == "gc",]
 
 # Number of scenarios
 n <- nrow(target_species)
 
 # Parameters for environmental temperature change scenarios (minimum, maximum and optimal temperature)
-temp <- seq(17.3, 32.2, by = 0.1)   # temperature range (Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea; Idike and Lupo (2024). Analysis of sea surface temperature patterns, vari...(29.34))
+temp <- seq(17.5, 32.0, by = 0.1)   # temperature range (Dovlo (2016). Seasonal variation in temperature in the Gulf of Guinea; Idike and Lupo (2024). Analysis of sea surface temperature patterns, vari...(29.34))
 min_temp_dev <- -9.5   # minimum temperature deviation from optimal temperature 
 max_temp_dev <- 6.0  # maximum temperature deviation from optimal temperature
 sp_opt_temp <- target_species$sp_opt_temp # species optimal temperature (source: fishbase.se/manual/key%20facts.htm)
@@ -364,70 +364,70 @@ ggsave(g9, filename = paste0("Shared/Outputs/size_indicator_sensitivity", target
 # ggsave(g10, filename = paste0("Shared/Outputs/size_indicator_sensitivity", target_species$species, "Linf_diff.png"), width = 15, height = 8, units = "in", dpi = 600)
 
 
-#  Plot mlength in catch vrs temperature deviation for all scenarios
-g11 <- ggplot(all_scnr_data) +
-  aes(x = temp_dev, y = size_indicator_catch_Linf, color = Fmort, group = Fmort) +
-  geom_line() +
-  facet_wrap(~target_species) +
-  geom_vline(xintercept = sp_opt_temp_dev, linetype = 2) +
-  annotate("text", x = sp_opt_temp_dev, y = max(all_scnr_data$size_indicator_catch_Linf), 
-          label = "sp_opt_temp_dev", angle = 90, vjust = -0.5, hjust = 1, size = 6, color = "black") +
-  labs(title = "Sensitivity of catch length-based indicators to changes in L∞ due to climate change", 
-       x = "Deviation in temperature (°C)", y = "Stationary length indicator in catch") +
-  scale_color_distiller(palette = "RdBu")
+# #  Plot mlength in catch vrs temperature deviation for all scenarios
+# g11 <- ggplot(all_scnr_data) +
+#   aes(x = temp_dev, y = size_indicator_catch_Linf, color = Fmort, group = Fmort) +
+#   geom_line() +
+#   facet_wrap(~target_species) +
+#   geom_vline(xintercept = sp_opt_temp_dev, linetype = 2) +
+#   annotate("text", x = sp_opt_temp_dev, y = max(all_scnr_data$size_indicator_catch_Linf), 
+#           label = "sp_opt_temp_dev", angle = 90, vjust = -0.5, hjust = 1, size = 6, color = "black") +
+#   labs(title = "Sensitivity of catch length-based indicators to changes in L∞ due to climate change", 
+#        x = "Deviation in temperature (°C)", y = "Stationary length indicator in catch") +
+#   scale_color_distiller(palette = "RdBu")
 
-g11 <- g11 + theme(strip.text = element_text(face = "italic"))  
+# g11 <- g11 + theme(strip.text = element_text(face = "italic"))  
 
-# # Save plots
-# ggsave(g11, filename = paste0("Shared/Outputs/size_indicator_sensitivity", target_species$species, "_catch.png"), width = 15, height = 8, units = "in", dpi = 300)
+# # # Save plots
+# # ggsave(g11, filename = paste0("Shared/Outputs/size_indicator_sensitivity", target_species$species, "_catch.png"), width = 15, height = 8, units = "in", dpi = 300)
 
 
-g12 <- ggplot(all_scnr_data) +
-  aes(x = temp_dev, y = size_indicator_catch_Linf_dynamic, color = Fmort, group = Fmort) +
-  geom_line() +
-  facet_wrap(~target_species) +
-  geom_vline(xintercept = sp_opt_temp_dev, linetype = 2) +
-  annotate("text", x = sp_opt_temp_dev, y = max(all_scnr_data$size_indicator_catch_Linf_dynamic), 
-          label = "sp_opt_temp_dev", angle = 90, vjust = -0.5, hjust = 1, size = 6, color = "black") +
-  labs(title = "Sensitivity of non-stationary length-indicators to changes in L∞ due to climate change", 
-       x = "Deviation in temperature (°C)", y = "Non-stationary length indicator in catch") +
-  scale_color_distiller(palette = "RdBu")
+# g12 <- ggplot(all_scnr_data) +
+#   aes(x = temp_dev, y = size_indicator_catch_Linf_dynamic, color = Fmort, group = Fmort) +
+#   geom_line() +
+#   facet_wrap(~target_species) +
+#   geom_vline(xintercept = sp_opt_temp_dev, linetype = 2) +
+#   annotate("text", x = sp_opt_temp_dev, y = max(all_scnr_data$size_indicator_catch_Linf_dynamic), 
+#           label = "sp_opt_temp_dev", angle = 90, vjust = -0.5, hjust = 1, size = 6, color = "black") +
+#   labs(title = "Sensitivity of non-stationary length-indicators to changes in L∞ due to climate change", 
+#        x = "Deviation in temperature (°C)", y = "Non-stationary length indicator in catch") +
+#   scale_color_distiller(palette = "RdBu")
 
-g12 <- g12 + theme(strip.text = element_text(face = "italic"))
+# g12 <- g12 + theme(strip.text = element_text(face = "italic"))
 
-# # Save plots
-# ggsave(g12, filename = paste0("Shared/Outputs/size_indicator_sensitivity", target_species$species, "_catch_dynamic.png"), width = 15, height = 8, units = "in", dpi = 300)
+# # # Save plots
+# # ggsave(g12, filename = paste0("Shared/Outputs/size_indicator_sensitivity", target_species$species, "_catch_dynamic.png"), width = 15, height = 8, units = "in", dpi = 300)
 
-# combine g11 and g12 and tag panels as a, b
-g13 <- g11 + g12 
+# # combine g11 and g12 and tag panels as a, b
+# g13 <- g11 + g12 
   
 
-# Save combined plot
-ggsave(g13, filename = paste0("Shared/Outputs/catchsize_indicator_sensitivity", target_species$species, "_catch_combined.png"), width = 15, height = 8, units = "in", dpi = 300)
+# # Save combined plot
+# ggsave(g13, filename = paste0("Shared/Outputs/catchsize_indicator_sensitivity", target_species$species, "_catch_combined.png"), width = 15, height = 8, units = "in", dpi = 300)
 
 
-#  difference between catch indicators between stationary and non-stationary indicators
-all_scnr_data$catch_Linf_diff <- with(all_scnr_data, size_indicator_catch_Linf - size_indicator_catch_Linf_dynamic)
+# #  difference between catch indicators between stationary and non-stationary indicators
+# all_scnr_data$catch_Linf_diff <- with(all_scnr_data, size_indicator_catch_Linf - size_indicator_catch_Linf_dynamic)
 
-g14 <- ggplot(all_scnr_data) + 
-  aes(x = temp_dev, y = catch_Linf_diff, color = Fmort, group = Fmort) +
-  geom_line() +
-  facet_wrap(~target_species) + 
-  geom_vline(xintercept = sp_opt_temp_dev, linetype = 2) +
-  geom_hline(yintercept = 0, linetype = 2) +
-  annotate("text", x = sp_opt_temp_dev, y = max(all_scnr_data$size_indicator_catch_Linf), 
-            label = "sp_opt_temp_dev", angle = 90, vjust = -0.5, hjust = 1, size = 6, color = "black") +
-    labs(title = "Sensitivity of length-based indicators to changes in L∞ due to climate change", 
-       x = "Deviation in temperature (°C)", y = "Estimation divergence \n (Stationary vs non-stationary length indicator in catch)") +
+# g14 <- ggplot(all_scnr_data) + 
+#   aes(x = temp_dev, y = catch_Linf_diff, color = Fmort, group = Fmort) +
+#   geom_line() +
+#   facet_wrap(~target_species) + 
+#   geom_vline(xintercept = sp_opt_temp_dev, linetype = 2) +
+#   geom_hline(yintercept = 0, linetype = 2) +
+#   annotate("text", x = sp_opt_temp_dev, y = max(all_scnr_data$size_indicator_catch_Linf), 
+#             label = "sp_opt_temp_dev", angle = 90, vjust = -0.5, hjust = 1, size = 6, color = "black") +
+#     labs(title = "Sensitivity of length-based indicators to changes in L∞ due to climate change", 
+#        x = "Deviation in temperature (°C)", y = "Estimation divergence \n (Stationary vs non-stationary length indicator in catch)") +
 
-  scale_color_distiller(palette = "RdBu")
+#   scale_color_distiller(palette = "RdBu")
 
-g14 <- g14 + theme(strip.text = element_text(face = "italic"))
+# g14 <- g14 + theme(strip.text = element_text(face = "italic"))
 
-# combine g13 and g14 
-g15 <- g13 + g14 
+# # combine g13 and g14 
+# g15 <- g13 + g14 
 
-# Save combined plot
-ggsave(g15, filename = paste0("Shared/Outputs/catchsize_indicator_sensitivity", target_species$species, "_catch_combined_diff.png"), width = 15, height = 8, units = "in", dpi = 300)
+# # Save combined plot
+# ggsave(g15, filename = paste0("Shared/Outputs/catchsize_indicator_sensitivity", target_species$species, "_catch_combined_diff.png"), width = 15, height = 8, units = "in", dpi = 300)
 
 
